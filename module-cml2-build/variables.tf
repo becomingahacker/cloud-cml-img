@@ -75,3 +75,9 @@ variable "uninstall_systems_manager_agent" {
   description = "Remove the AWS Systems Manager agent from the build instance after finishing"
   default     = true
 }
+
+variable "build_version" {
+  type        = string
+  description = "Version of the CML build"
+  default     = "1.0.0"
+}

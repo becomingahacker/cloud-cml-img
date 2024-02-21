@@ -11,6 +11,9 @@
 # Keep the build machine running if the build fails
 debug: true
 
+# Image version
+version: 0.0.2
+
 # AWS configs
 aws:
   region: us-east-2

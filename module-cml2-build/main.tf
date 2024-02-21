@@ -7,7 +7,7 @@
 locals {
   script_cml_sh = templatefile("${path.module}/templates/cml.sh.tftmpl", {})
   script_config_sh = templatefile("${path.module}/templates/config.sh.tftmpl", {
-    region         = var.region
+    region         = var.build_version
     bucket         = var.bucket_name
     debian_package = var.cml_debian_package
   })
@@ -79,7 +79,7 @@ resource "aws_imagebuilder_component" "component_cml_install" {
   name        = "component_cml_install"
   description = "Install Cisco Modeling Labs"
   platform    = "Linux"
-  version     = "1.0.0"
+  version     = var.build_version
   data = yamlencode({
     schemaVersion = 1.0
     phases = [
@@ -109,7 +109,7 @@ resource "aws_imagebuilder_component" "component_cml_install" {
                 group       = "root"
                 permissions = "0755"
               },
-            ] 
+            ]
           },
           {
             action    = "CreateFile"
@@ -119,12 +119,12 @@ resource "aws_imagebuilder_component" "component_cml_install" {
               {
                 path        = "/provision/cml.sh"
                 content     = local.script_cml_sh
-                permissions = "0644"
+                permissions = "0755"
               },
               {
                 path        = "/provision/del.sh"
                 content     = local.script_del_sh
-                permissions = "0644"
+                permissions = "0755"
               },
               {
                 path        = "/provision/config.sh"
@@ -134,7 +134,7 @@ resource "aws_imagebuilder_component" "component_cml_install" {
               {
                 path        = "/provision/configure_aws_region.sh"
                 content     = local.script_configure_aws_region_sh
-                permissions = "0644"
+                permissions = "0755"
               },
               {
                 path        = "/provision/reference_platforms.json"
@@ -162,7 +162,7 @@ resource "aws_imagebuilder_component" "component_cml_install" {
 resource "aws_imagebuilder_image_recipe" "cloud_cml_image_recipe" {
   name         = "cloud_cml_image_recipe"
   parent_image = data.aws_ami.ubuntu_focal_server_ami.id
-  version      = "1.0.0"
+  version      = var.build_version
 
   block_device_mapping {
     device_name = "/dev/sda1"
