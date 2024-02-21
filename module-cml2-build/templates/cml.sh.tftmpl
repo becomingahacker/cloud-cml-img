@@ -6,7 +6,9 @@
 # All rights reserved.
 #
 
+%{ if debug_build ~}
 set -x
+%{ endif ~}
 set -e
 
 function base_setup() {
