@@ -1,0 +1,77 @@
+#
+# This file is part of Cisco Modeling Labs
+# Copyright (c) 2019-2023, Cisco Systems, Inc.
+# All rights reserved.
+#
+
+#
+# This is the configuration file for the CML bootstrap script.
+#
+
+# Keep the build machine running if the build fails
+debug: true
+
+# AWS configs
+aws:
+  region: us-east-2
+  vpc: cmm-vpc
+  availability_zone: us-east-2a
+  subnet: cmm-subnet-public1-us-east-2a
+  security_group: default
+
+  # The S3 bucket where reference platforms are stored
+  bucket: bah-machine-images
+
+  # TODO cmm - CiscoModelingLabs role must not be able to access this bucket
+  # Must be globally unique and updated in terraform.tf backend config
+  tfstate_bucket: cml-tfstate-bucket
+  tfstate_key: cloud-cml-img/terraform.tfstate
+
+  # The EC2 instance type to use.  Use a .metal type for /dev/kvm support.
+  #flavor: z1d.metal
+  #flavor: c5n.metal
+  flavor: c5d.xlarge
+
+  # IAM Role for EC2 host to assume
+  profile: CiscoModelingLabsBuild
+
+  ssh_key_name: bootstrap_ssh
+  disk_size: 16
+
+cml:
+  debian_package: cml2_2.6.1-11_amd64.deb
+
+  # select the ones needed by un-/commenting them. The selected
+  # reference platforms will be copied from the specified bucket
+  # and must be available prior to starting an instance.
+  reference_platforms:
+    definitions:
+      - alpine
+      - alpine-trex
+      - alpine-wanem
+      - asav
+      - cat8000v
+      - cat9000v-s1
+      - csr1000v
+      - desktop
+      - iosv
+      - iosvl2
+      - iosxrv9000
+      - nxosv9000
+      - server
+      - ubuntu
+    images:
+      - alpine-3-16-2-base
+      - alpine-3-16-2-trex
+      - alpine-3-16-2-wanem
+      - asav-9-18-2
+      - cat8000v-17-09-01a
+      - cat9000v-s1-17.10.01prd7
+      - csr1000v-17-03-06
+      - desktop-3-16-2-xfce
+      - iosv-159-3-m6
+      - iosvl2-2020
+      - iosxrv9000-7-7-1
+      - nxosv9300-10-3-1-f
+      - server-tcl-13-1
+      - ubuntu-22-04-20221028

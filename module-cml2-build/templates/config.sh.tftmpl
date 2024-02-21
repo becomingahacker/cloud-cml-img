@@ -1,0 +1,3 @@
+AWS_REGION='${region}'
+AWS_BUCKET='${bucket}'
+APP_DEB='${debian_package}'
