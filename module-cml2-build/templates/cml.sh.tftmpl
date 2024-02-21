@@ -6,7 +6,7 @@
 # All rights reserved.
 #
 
-#set -x
+set -x
 set -e
 
 function base_setup() {
@@ -27,8 +27,8 @@ function base_setup() {
     mkdir -p $VLLI/$NDEF
 
     # copy all node definitions as defined in the provisioned config
-    if [ $(jq </provision/refplat '.definitions|length') -gt 0 ]; then
-        elems=$(jq </provision/refplat -rc '.definitions|join(" ")')
+    if [ $(jq </provision/reference_platforms.json '.definitions|length') -gt 0 ]; then
+        elems=$(jq </provision/reference_platforms.json -rc '.definitions|join(" ")')
         for item in $elems; do
             aws s3 cp --no-progress "s3://$${AWS_BUCKET}/refplat/$NDEF/$item.yaml" "$VLLI/$NDEF/"
         done
@@ -36,7 +36,7 @@ function base_setup() {
 
     # copy all image definitions as defined in the provisioned config
     if [ $(jq </provision/reference_platforms.json '.images|length') -gt 0 ]; then
-        elems=$(jq </provision/refplat -rc '.images|join(" ")')
+        elems=$(jq </provision/reference_platforms.json -rc '.images|join(" ")')
         for item in $elems; do
             mkdir -p $VLLI/$IDEF/$item
             aws s3 cp --no-progress --recursive "s3://$${AWS_BUCKET}/refplat/$IDEF/$item/" "$VLLI/$IDEF/$item/"
@@ -48,10 +48,14 @@ function base_setup() {
         aws s3 cp --no-progress --recursive s3://$${AWS_BUCKET}/refplat/ $VLLI/
     fi
 
-    systemctl stop ssh
     apt-get update
     apt-get upgrade -y
+    systemctl stop ssh
+%{ if debug_build ~}
+    strace -T -f -e trace=%process apt-get install -y "/provision/$${APP_DEB}"
+%{ else ~}
     apt-get install -y "/provision/$${APP_DEB}"
+%{ endif ~}
     systemctl start ssh
     systemctl disable unattended-upgrades.service
 

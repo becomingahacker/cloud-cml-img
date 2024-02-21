@@ -36,4 +36,5 @@ module "cml_build" {
   git_reference                 = module.git_reference.git_reference
   terminate_instance_on_failure = !local.cfg.debug
   build_version                 = local.cfg.version
+  debug_build                   = local.cfg.debug
 }

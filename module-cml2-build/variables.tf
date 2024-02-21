@@ -64,6 +64,12 @@ variable "terminate_instance_on_failure" {
   default     = false
 }
 
+variable "debug_build" {
+  type        = bool
+  description = "Debug build"
+  default     = false
+}
+
 variable "git_reference" {
   type        = string
   description = "Git reference to use for the build"

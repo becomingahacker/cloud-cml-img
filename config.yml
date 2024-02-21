@@ -9,10 +9,10 @@
 #
 
 # Keep the build machine running if the build fails
-debug: true
+debug: false
 
 # Image version
-version: 0.0.2
+version: 0.0.5
 
 # AWS configs
 aws:

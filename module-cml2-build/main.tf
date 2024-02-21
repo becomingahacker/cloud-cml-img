@@ -5,9 +5,11 @@
 #
 
 locals {
-  script_cml_sh = templatefile("${path.module}/templates/cml.sh.tftmpl", {})
+  script_cml_sh = templatefile("${path.module}/templates/cml.sh.tftmpl", {
+    debug_build = var.debug_build
+  })
   script_config_sh = templatefile("${path.module}/templates/config.sh.tftmpl", {
-    region         = var.build_version
+    region         = var.region
     bucket         = var.bucket_name
     debian_package = var.cml_debian_package
   })
