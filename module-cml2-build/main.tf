@@ -102,12 +102,14 @@ resource "aws_imagebuilder_component" "component_cml_install" {
             action    = "CreateFolder"
             name      = "Create_Provision_Folder"
             onFailure = "Abort"
-            inputs = {
-              path        = "/provision"
-              owner       = "root"
-              group       = "root"
-              permissions = "0755"
-            }
+            inputs = [
+              {
+                path        = "/provision"
+                owner       = "root"
+                group       = "root"
+                permissions = "0755"
+              },
+            ] 
           },
           {
             action    = "CreateFile"
