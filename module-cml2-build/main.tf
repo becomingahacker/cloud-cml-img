@@ -6,7 +6,8 @@
 
 locals {
   script_cml_sh = templatefile("${path.module}/templates/cml.sh.tftmpl", {
-    debug_build = var.debug_build
+    debug_build  = var.debug_build
+    copy_refplat = var.copy_refplat
   })
   script_config_sh = templatefile("${path.module}/templates/config.sh.tftmpl", {
     region         = var.region

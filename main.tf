@@ -37,4 +37,5 @@ module "cml_build" {
   terminate_instance_on_failure = !local.cfg.debug
   build_version                 = local.cfg.version
   debug_build                   = local.cfg.debug
+  copy_refplat                  = local.cfg.cml.copy_reference_platforms
 }

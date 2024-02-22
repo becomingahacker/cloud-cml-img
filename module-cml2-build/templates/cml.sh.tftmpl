@@ -22,6 +22,7 @@ function base_setup() {
     # copy debian package from bucket into our instance
     aws s3 cp --no-progress "s3://$${AWS_BUCKET}/$${APP_DEB}" /provision/
 
+%{ if copy_refplat ~}
     # copy node definitions and images to the instance
     VLLI=/var/lib/libvirt/images
     NDEF=node-definitions
@@ -49,6 +50,7 @@ function base_setup() {
     if [ $(find $VLLI -type f | wc -l) -eq 0 ]; then
         aws s3 cp --no-progress --recursive s3://$${AWS_BUCKET}/refplat/ $VLLI/
     fi
+%{ endif ~}
 
     apt-get update
     apt-get upgrade -y

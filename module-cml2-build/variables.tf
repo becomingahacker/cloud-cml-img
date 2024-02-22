@@ -87,3 +87,9 @@ variable "build_version" {
   description = "Version of the CML build"
   default     = "1.0.0"
 }
+
+variable "copy_refplat" {
+  type        = bool
+  description = "Copy reference platforms to the build instance"
+  default     = false
+}
