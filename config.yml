@@ -12,7 +12,7 @@
 debug: false
 
 # Image version
-version: 0.0.5
+version: 0.0.7
 
 # AWS configs
 aws:

@@ -61,15 +61,30 @@ function base_setup() {
     systemctl start ssh
     systemctl disable unattended-upgrades.service
 
+%{if debug_build ~}
     # For troubleshooting. To allow console access on AWS, the root user needs a
     # password. Note: not all instance types / flavors provide a serial console!
-    # echo "root:secret-password-here" | /usr/sbin/chpasswd
+    #echo "root:secret-password-here" | /usr/sbin/chpasswd
+%{endif ~}
 
     # Save the machine ID as a reference for the build
     # This is the default password when installing CML and will be changed when
     # deploying later
     cat /etc/machine-id > /provision/build-machine-id 
     chmod 0600 /provision/build-machine-id 
+
+    # Remove the DSA host keys, left as residue
+    rm /etc/ssh/ssh_host_* || true
+    # Clean up cloud-init and make a new machine-id
+    cloud-init clean --logs --machine-id
+    
+%{if false ~}
+    # HACK cmm - Workaround for cloud-init.service/start ordering cycle
+    # We depend on AWS security groups for the firewall, so no need for it
+    # on the host
+    # https://bugs.launchpad.net/ubuntu/+source/cloud-init/+bug/1956629
+%{endif ~}
+    systemctl disable firewalld.service
 }
 
 cd $(dirname "$0")
