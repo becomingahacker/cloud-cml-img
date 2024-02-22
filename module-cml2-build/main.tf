@@ -153,6 +153,10 @@ resource "aws_imagebuilder_component" "component_cml_install" {
             inputs = {
               commands = [
                 "/provision/cml.sh",
+                "systemctl stop nginx",
+                # Increase the client_max_body_size to 64G to support larger QCOW2 image uploads
+                "sed -i 's/client_max_body_size 16G;/client_max_body_size 64G;/' /etc/nginx/conf.d/controller.conf",
+                "systemctl start nginx",
               ]
             }
           },
