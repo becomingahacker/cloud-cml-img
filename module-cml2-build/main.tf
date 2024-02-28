@@ -176,7 +176,8 @@ resource "aws_imagebuilder_image_recipe" "cloud_cml_image_recipe" {
     ebs {
       delete_on_termination = true
       volume_size           = var.disk_size
-      volume_type           = "gp2"
+      volume_type           = "io2"
+      iops                  = 2000
     }
   }
 
@@ -205,6 +206,7 @@ resource "aws_imagebuilder_distribution_configuration" "cloud_cml_image_distribu
       ami_tags = {
         Name          = "cloud-cml-{{ imagebuilder:buildDate }}"
         Git_Reference = var.git_reference
+        Version       = var.build_version
       }
     }
   }
@@ -223,7 +225,7 @@ resource "aws_imagebuilder_image" "cloud_cml_image" {
   enhanced_image_metadata_enabled = false
 
   # Increase if the build takes longer than expected
-  #timeouts {
-  #  create = "60m"
-  #}
+  timeouts {
+    create = "60m"
+  }
 }
