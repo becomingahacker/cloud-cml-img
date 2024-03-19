@@ -10,9 +10,9 @@ locals {
     copy_refplat = var.copy_refplat
   })
   script_config_sh = templatefile("${path.module}/templates/config.sh.tftmpl", {
-    region         = var.region
-    bucket         = var.bucket_name
-    debian_package = var.cml_debian_package
+    region          = var.region
+    bucket          = var.bucket_name
+    debian_packages = var.cml_debian_packages
   })
   script_configure_aws_region_sh = templatefile("${path.module}/templates/configure_aws_region.sh.tftmpl", {})
   script_del_sh                  = templatefile("${path.module}/templates/del.sh.tftmpl", {})

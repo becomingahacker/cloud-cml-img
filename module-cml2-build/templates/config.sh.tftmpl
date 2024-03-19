@@ -6,4 +6,5 @@
 
 AWS_REGION='${region}'
 AWS_BUCKET='${bucket}'
-APP_DEB='${debian_package}'
+APP_DEBS_STR='${join(",", debian_packages)}'
+IFS=',' read -r -a APP_DEBS <<< "$APP_DEBS_STR"

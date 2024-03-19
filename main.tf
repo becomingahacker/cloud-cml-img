@@ -32,7 +32,7 @@ module "cml_build" {
   ssh_key_name                  = local.cfg.aws.ssh_key_name
   bucket_name                   = local.cfg.aws.bucket
   reference_platforms           = local.cfg.cml.reference_platforms
-  cml_debian_package            = local.cfg.cml.debian_package
+  cml_debian_packages           = local.cfg.cml.debian_packages
   git_reference                 = module.git_reference.git_reference
   terminate_instance_on_failure = !local.cfg.debug
   build_version                 = local.cfg.version

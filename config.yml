@@ -12,7 +12,7 @@
 debug: true
 
 # Image version
-version: 0.1.1
+version: 0.1.4
 
 # AWS configs
 aws:
@@ -42,7 +42,9 @@ aws:
   disk_size: 24
 
 cml:
-  debian_package: cml2_2.7.0dev0-1660_amd64.deb
+  debian_packages: 
+    - cml2_2.7.0-2_amd64.deb
+    - iol-tools_0.1.4_amd64.deb
 
   copy_reference_platforms: true
   # select the ones needed by un-/commenting them. The selected

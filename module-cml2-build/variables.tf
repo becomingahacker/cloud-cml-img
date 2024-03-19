@@ -45,9 +45,9 @@ variable "bucket_name" {
   description = "AWS S3 bucket name"
 }
 
-variable "cml_debian_package" {
-  type        = string
-  description = "CML Debian package name"
+variable "cml_debian_packages" {
+  type        = list(string)
+  description = "CML Debian package names"
 }
 
 variable "reference_platforms" {
