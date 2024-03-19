@@ -14,10 +14,10 @@ TOKEN=`curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-me
 # Get the current AWS region from the IMDS
 AWS_REGION=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
 
-mkdir -vp /root/.aws
+mkdir -vp "$${HOME}/.aws"
 
-# Output the configured AWS region to the root account user
-cat <<EOF > /root/.aws/config
+# Output the configured AWS region to the user
+cat <<EOF > "$${HOME}/.aws/config"
 [default]
 region = $AWS_REGION
 EOF
