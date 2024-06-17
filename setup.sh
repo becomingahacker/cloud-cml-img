@@ -10,6 +10,8 @@ set -x
 
 env
 
+ls -laRF /tmp
+
 # HACK cmm - Disable security.ubuntu.com so we don't get throttled
 sed -i 's@deb http://security.ubuntu.com@# deb http://security.ubuntu.com@' /etc/apt/sources.list
 # Wait for possible auto updates to complete.  This may not be needed
