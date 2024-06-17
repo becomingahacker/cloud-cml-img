@@ -5,7 +5,7 @@
 #
 
 steps:
-  - name: 'us-east1-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/bah-kali-linux-img'
+  - name: 'us-east1-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img'
     env:
       - 'SOURCE_IMAGE_FAMILY=ubuntu-2004-lts'
       - 'SOURCE_IMAGE_PROJECT_ID=ubuntu-os-cloud'
