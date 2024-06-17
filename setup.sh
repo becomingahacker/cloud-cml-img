@@ -21,10 +21,10 @@ apt-get update
 apt-get upgrade -y
 
 # Set the locale to en_US.UTF-8
-printf "LANG=en_US.UTF-8\nLC_ALL=en_US.UTF-8\n" > /etc/default/locale
-apt-get install -y locales-all
-locale-gen --purge "en_US.UTF-8"
+locale-gen en_US
+locale-gen en_US.UTF-8
 dpkg-reconfigure locales
+update-locale LANG=en_US.UTF-8
 
 # Set the timezone to Eastern
 timedatectl set-timezone Etc/UTC
