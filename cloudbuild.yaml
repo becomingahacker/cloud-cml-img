@@ -1,0 +1,67 @@
+#
+# This file is part of Cisco Modeling Labs
+# Copyright (c) 2019-2024, Cisco Systems, Inc.
+# All rights reserved.
+#
+
+steps:
+  - name: 'us-east1-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/bah-kali-linux-img'
+    env:
+      - 'SOURCE_IMAGE_FAMILY=ubuntu-2004-lts'
+      - 'SOURCE_IMAGE_PROJECT_ID=ubuntu-os-cloud'
+      - 'PROVISION_SCRIPT=setup.sh'
+      - 'GCS_ARTIFACT_BUCKET=gs://bah-machine-images'
+      - 'CML_PACKAGE=cml2_2.7.0-4_amd64-20.pkg'
+      - 'APT_OPTS="-o Dpkg::Options::=--force-confmiss -o Dpkg::Options::=--force-confnew -o DPkg::Progress-Fancy=0 -o APT::Color=0"'
+      - 'DEBIAN_FRONTEND=noninteractive'
+      - 'PACKER_LOG=1'
+      - 'LOCATION=$LOCATION'
+      - 'PROJECT_ID=$PROJECT_ID'
+      - 'ZONE=$LOCATION-b'
+      - 'SERVICE_ACCOUNT_EMAIL=$SERVICE_ACCOUNT_EMAIL'
+
+    script: |
+      #!/usr/bin/env bash
+
+      set -e
+      #set -x
+
+      env
+
+      echo "Locale settings:"
+      cat /etc/default/locale
+
+      # Build Cisco Modeling Labs image with Packer
+      packer init cloud-cml-gce.pkr.hcl
+      packer validate \
+        -var "service_account_email=$SERVICE_ACCOUNT_EMAIL" \
+        -var "zone=$ZONE" \
+        -var "project_id=$PROJECT_ID" \
+        -var "source_image_family=$SOURCE_IMAGE_FAMILY" \
+        -var "source_image_project_id=$SOURCE_IMAGE_PROJECT_ID" \
+        -var "provision_script=$PROVISION_SCRIPT" \
+        -var "gcs_artifact_bucket=$GCS_ARTIFACT_BUCKET" \
+        -var "cml_package=$CML_PACKAGE" \
+        cloud-cml-gce.pkr.hcl
+      packer build \
+        -var "service_account_email=$SERVICE_ACCOUNT_EMAIL" \
+        -var "zone=$ZONE" \
+        -var "project_id=$PROJECT_ID" \
+        -var "source_image_family=$SOURCE_IMAGE_FAMILY" \
+        -var "source_image_project_id=$SOURCE_IMAGE_PROJECT_ID" \
+        -var "provision_script=$PROVISION_SCRIPT" \
+        -var "gcs_artifact_bucket=$GCS_ARTIFACT_BUCKET" \
+        -var "cml_package=$CML_PACKAGE" \
+        cloud-cml-gce.pkr.hcl
+
+      jq . manifest.json
+
+      IMAGE=$(jq -r .builds[0].artifact_id manifest.json)
+
+
+logsBucket: 'gs://bah-build-logs/cloud-cml-img'
+serviceAccount: 'projects/gcp-asigbahgcp-nprd-47930/serviceAccounts/build-cloud-cml-img@gcp-asigbahgcp-nprd-47930.iam.gserviceaccount.com'
+
+options:
+  logging: GCS_ONLY
+  logStreamingOption: STREAM_ON
