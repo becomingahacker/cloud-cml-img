@@ -80,7 +80,7 @@ source "googlecompute" "cloud-cml-amd64" {
     "us-east1",
   ]
 
-  ssh_username            = "ubuntu"
+  ssh_username            = "root"
   service_account_email   = var.service_account_email
 
   scopes = [

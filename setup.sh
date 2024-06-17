@@ -10,7 +10,7 @@ set -x
 
 env
 
-find /tmp
+find /tmp -ls
 
 # HACK cmm - Disable security.ubuntu.com so we don't get throttled
 sed -i 's@deb http://security.ubuntu.com@# deb http://security.ubuntu.com@' /etc/apt/sources.list
@@ -39,8 +39,8 @@ cat > /etc/cloud/clean.d/10-cml-clean <<EOF
 sudo rm /etc/hosts
 sudo rm /etc/hostname
 
-sudo rm /home/ubuntu/.bash_history
-sudo truncate -s 0 /home/ubuntu/.ssh/authorized_keys
+sudo rm /home/root/.bash_history
+sudo truncate -s 0 /home/root/.ssh/authorized_keys
 
 # Clean up packages that can be removed
 apt-get autoremove --purge -y
