@@ -67,7 +67,7 @@ locals {
 source "googlecompute" "cloud-cml-amd64" {
   project_id              = var.project_id
   source_image_family     = var.source_image_family
-  source_image_project_id = var.source_image_project_id
+  source_image_project_id = [ var.source_image_project_id ]
   image_family            = "cloud-cml-amd64"
   image_name              = "cloud-cml-{{timestamp}}-amd64"
 
