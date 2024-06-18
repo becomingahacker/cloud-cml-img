@@ -14,7 +14,7 @@ cluster_interface: ""
 compute_secret: ""
 controller_name: ""
 copy_iso_to_disk: false
-hostname: ${hostname}
+hostname: ""
 interactive: false
 is_cluster: ""
 is_compute: true
