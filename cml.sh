@@ -14,9 +14,6 @@ source /provision/common.sh
 source /provision/copyfile.sh
 source /provision/vars.sh
 
-echo "### Provisioning via cml.sh starts"
-env
-
 function setup_pre_aws() {
     export AWS_DEFAULT_REGION=${CFG_AWS_REGION}
     apt-get install -y awscli
@@ -83,7 +80,7 @@ function base_setup() {
     touch /etc/.virl2_unconfigured
     systemctl stop getty@tty1.service
     echo "initial setup start: $(date +'%T.%N')"
-    #systemctl enable --now virl2-initial-setup.service
+    systemctl enable --now virl2-initial-setup.service
     echo "initial setup done: $(date +'%T.%N')"
 
     # this should not be needed in cloud!?
@@ -267,7 +264,7 @@ echo "### Provisioning via cml.sh starts"
 # For troubleshooting. To allow console access on AWS, the root user needs a
 # password. Note: not all instance types / flavors provide a serial console!
 # TODO cmm - FIXME
-echo "root:secret-password-here" | /usr/sbin/chpasswd
+#echo "root:secret-password-here" | /usr/sbin/chpasswd
 
 # Ensure non-interactive Debian package installation
 APT_OPTS="-o Dpkg::Options::=--force-confmiss -o Dpkg::Options::=--force-confnew"

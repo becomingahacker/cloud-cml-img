@@ -62,9 +62,14 @@ variable "cml_package" {
 }
 
 locals {
+  #debug = false
+  debug = true
 }
 
 source "googlecompute" "cloud-cml-amd64" {
+
+  skip_create_image       = local.debug
+
   project_id              = var.project_id
   source_image_family     = var.source_image_family
   source_image_project_id = [ var.source_image_project_id ]
@@ -112,6 +117,16 @@ build {
     destination = "/provision"
   }
 
+  # Also copy the configuration file to the /etc directory.
+  provisioner "file" {
+    only        = [
+      "googlecompute.cloud-cml-amd64",
+    ]
+
+    source      = "/workspace/virl2-base-config.yml"
+    destination = "/etc/virl2-base-config.yml"
+  }
+
   provisioner "shell" {
     only           = [
       "googlecompute.cloud-cml-amd64",
@@ -125,6 +140,11 @@ build {
       CFG_GCP_BUCKET  = var.gcs_artifact_bucket
       CFG_CML_PACKAGE = var.cml_package
     }
+  }
+
+  provisioner "breakpoint" {
+    disable = local.debug
+    note    = "stop here to debug instance"
   }
 
   post-processor "manifest" {

@@ -4,8 +4,8 @@
 # All rights reserved.
 #
 
-CONFIG_FILE="/provision/virl2-base-config.yml"
+CONFIG_FILE="/etc/virl2-base-config.yml"
 
 function is_controller() {
-    false
+    [[ -r "$CONFIG_FILE" ]] && egrep -qi '"?is_controller"?: true' "$CONFIG_FILE"
 }
