@@ -117,7 +117,7 @@ build {
 
   # Make sure cml.sh is executable and pause for debugging
   provisioner "shell" {
-    inline = <<-EOF
+    inline = [ <<-EOF
       chmod u+x /provision/cml.sh
 
       if [ "$DEBUG" = "true" ]; then
@@ -125,6 +125,7 @@ build {
         sleep 3600 || true
       fi
     EOF
+    ]
     env = {
       DEBUG = local.debug
     }
