@@ -4,7 +4,7 @@
 # All rights reserved.
 #
 
-CONFIG_FILE="/workspace/virl2-base-config.yml"
+CONFIG_FILE="/provision/virl2-base-config.yml"
 
 function is_controller() {
     false
