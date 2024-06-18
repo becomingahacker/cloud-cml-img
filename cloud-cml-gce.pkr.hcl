@@ -190,14 +190,14 @@ build {
   provisioner "file" {
     only    = ["googlecompute.cloud-cml-controller-amd64"]
     content = yamlencode(local.cml_config_controller)
-    destionation = "/etc/virl2-base-config.yml"
+    destination = "/etc/virl2-base-config.yml"
   }
 
   # Copy the compute configuration file to the /etc directory.
   provisioner "file" {
     only    = ["googlecompute.cloud-cml-compute-amd64"]
     content = yamlencode(local.cml_config_compute)
-    destionation = "/etc/virl2-base-config.yml"
+    destination = "/etc/virl2-base-config.yml"
   }
 
   # Make sure cml.sh is executable and pause for debugging before running the
