@@ -91,6 +91,18 @@ source "googlecompute" "cloud-cml-amd64" {
 build {
   sources = ["sources.googlecompute.cloud-cml-amd64"]
 
+  # Make sure the /provision directory exists.
+  provisioner "shell" {
+    only           = [
+      "googlecompute.cloud-cml-amd64",
+    ]
+
+    inline = [
+      "mkdir -vp /provision",
+    ]
+  }
+
+  # Copy everything from the workspace to the /provision directory.
   provisioner "file" {
     only        = [
       "googlecompute.cloud-cml-amd64",
