@@ -8,9 +8,10 @@
 set -e
 set -x
 
+echo "### Provisioning via setup.sh starts"
 env
 
-find /tmp -ls
+find /provision -ls
 
 # HACK cmm - Disable security.ubuntu.com so we don't get throttled
 sed -i 's@deb http://security.ubuntu.com@# deb http://security.ubuntu.com@' /etc/apt/sources.list
@@ -30,11 +31,6 @@ update-locale LANG=en_US.UTF-8
 timedatectl set-timezone Etc/UTC
 
 touch /tmp/PACKER_BUILD
-
-pwd
-find .
-
-./cml.sh
 
 cat > /etc/cloud/clean.d/10-cml-clean <<EOF
 #!/bin/sh -x

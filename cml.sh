@@ -14,6 +14,9 @@ source /provision/common.sh
 source /provision/copyfile.sh
 source /provision/vars.sh
 
+echo "### Provisioning via cml.sh starts"
+env
+
 function setup_pre_aws() {
     export AWS_DEFAULT_REGION=${CFG_AWS_REGION}
     apt-get install -y awscli

@@ -91,6 +91,15 @@ source "googlecompute" "cloud-cml-amd64" {
 build {
   sources = ["sources.googlecompute.cloud-cml-amd64"]
 
+  provisioner "file" {
+    only        = [
+      "googlecompute.cloud-cml-amd64",
+    ]
+
+    source      = "/workspace/"
+    destination = "/provision"
+  }
+
   provisioner "shell" {
     only           = [
       "googlecompute.cloud-cml-amd64",
@@ -98,12 +107,12 @@ build {
 
     script = var.provision_script
 
-    environment_vars = [
-      "APT_OPTS=\"-o Dpkg::Options::=--force-confmiss -o Dpkg::Options::=--force-confnew -o DPkg::Progress-Fancy=0 -o APT::Color=0\"",
-      "DEBIAN_FRONTEND=noninteractive",
-      "CFG_GCP_BUCKET=${var.gcs_artifact_bucket}",
-      "CFG_CML_PACKAGE=${var.cml_package}"
-    ]
+    env = { 
+      APT_OPTS        = "-o Dpkg::Options::=--force-confmiss -o Dpkg::Options::=--force-confnew -o DPkg::Progress-Fancy=0 -o APT::Color=0"
+      DEBIAN_FRONTEND = "noninteractive"
+      CFG_GCP_BUCKET  = var.gcs_artifact_bucket
+      CFG_CML_PACKAGE = var.cml_package
+    }
   }
 
   post-processor "manifest" {
