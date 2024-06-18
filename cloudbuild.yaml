@@ -10,7 +10,7 @@ steps:
       - 'SOURCE_IMAGE_FAMILY=ubuntu-2004-lts'
       - 'SOURCE_IMAGE_PROJECT_ID=ubuntu-os-cloud'
       - 'PROVISION_SCRIPT=setup.sh'
-      - 'GCS_ARTIFACT_BUCKET=gs://bah-machine-images'
+      - 'GCS_ARTIFACT_BUCKET=bah-machine-images'
       - 'CML_PACKAGE=cml2_2.7.0-4_amd64-20.pkg'
       - 'APT_OPTS="-o Dpkg::Options::=--force-confmiss -o Dpkg::Options::=--force-confnew -o DPkg::Progress-Fancy=0 -o APT::Color=0"'
       - 'DEBIAN_FRONTEND=noninteractive'
