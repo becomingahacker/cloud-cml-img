@@ -115,16 +115,19 @@ build {
     destination = "/etc/virl2-base-config.yml"
   }
 
-  # Make sure cml.sh is executable
+  # Make sure cml.sh is executable and pause for debugging
   provisioner "shell" {
-    inline = [
-      "chmod u+x /provision/cml.sh",
-    ]
-  }
+    inline = <<-EOF
+      chmod u+x /provision/cml.sh
 
-  provisioner "breakpoint" {
-    disable = ! local.debug
-    note    = "stop here to debug instance"
+      if [ "$DEBUG" = "true" ]; then
+        echo "Pausing for debugging..."
+        sleep 3600 || true
+      fi
+    EOF
+    env = {
+      DEBUG = local.debug
+    }
   }
 
   provisioner "shell" {
