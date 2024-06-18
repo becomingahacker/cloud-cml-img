@@ -145,8 +145,8 @@ build {
   post-processor "manifest" {
    output = "/workspace/manifest.json"
     strip_path = true
-    custom_data = {
-      timestamp = "{{timestamp}}"
-    }
+    #custom_data = {
+    #  foo = "bar"
+    #}
   }
 }
