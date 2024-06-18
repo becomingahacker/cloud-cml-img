@@ -68,8 +68,8 @@ variable "cml_package" {
 }
 
 locals {
-  #debug = false
-  debug = true
+  debug = false
+  #debug = true
 
   cml_config_template = {
     admins = {
@@ -188,14 +188,14 @@ build {
 
   # Copy the controller configuration file to the /etc directory.
   provisioner "file" {
-    only    = ["sources.googlecompute.cloud-cml-controller-amd64"]
+    only    = ["googlecompute.cloud-cml-controller-amd64"]
     content = yamlencode(local.cml_config_controller)
     destionation = "/etc/virl2-base-config.yml"
   }
 
   # Copy the compute configuration file to the /etc directory.
   provisioner "file" {
-    only    = ["sources.googlecompute.cloud-cml-compute-amd64"]
+    only    = ["googlecompute.cloud-cml-compute-amd64"]
     content = yamlencode(local.cml_config_compute)
     destionation = "/etc/virl2-base-config.yml"
   }
