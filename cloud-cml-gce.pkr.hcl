@@ -62,8 +62,8 @@ variable "cml_package" {
 }
 
 locals {
-  #debug = false
-  debug = true
+  debug = false
+  #debug = true
 }
 
 source "googlecompute" "cloud-cml-amd64" {
