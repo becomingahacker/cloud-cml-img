@@ -40,15 +40,15 @@ function base_setup() {
         mkdir -p $VLLI/$NDEF
 
         # copy all node definitions as defined in the provisioned config
-        if [ $(jq </provision/refplat '.definitions|length') -gt 0 ]; then
-            elems=$(jq </provision/refplat -rc '.definitions|join(" ")')
+        if [ $(jq </provision/refplat.json '.definitions|length') -gt 0 ]; then
+            elems=$(jq </provision/refplat.json -rc '.definitions|join(" ")')
             for item in $elems; do
                 copyfile refplat/$NDEF/$item.yaml $VLLI/$NDEF/
             done
         fi
 
         # copy all image definitions as defined in the provisioned config
-        if [ $(jq </provision/refplat '.images|length') -gt 0 ]; then
+        if [ $(jq </provision/refplat.json '.images|length') -gt 0 ]; then
             elems=$(jq </provision/refplat -rc '.images|join(" ")')
             for item in $elems; do
                 mkdir -p $VLLI/$IDEF/$item

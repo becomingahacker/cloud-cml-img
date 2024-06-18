@@ -1,3 +1,3 @@
 # cloud-cml-img
-Build CML **Compute** Image for Becoming a Hacker Lab on Google Cloud Platform
+Build CML Controller and Compute Images for Becoming a Hacker Lab on Google Cloud Platform
 
