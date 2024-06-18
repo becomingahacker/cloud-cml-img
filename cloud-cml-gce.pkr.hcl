@@ -98,10 +98,6 @@ build {
 
   # Make sure the /provision directory exists.
   provisioner "shell" {
-    only           = [
-      "googlecompute.cloud-cml-amd64",
-    ]
-
     inline = [
       "mkdir -vp /provision",
     ]
@@ -109,40 +105,29 @@ build {
 
   # Copy everything from the workspace to the /provision directory.
   provisioner "file" {
-    only        = [
-      "googlecompute.cloud-cml-amd64",
-    ]
-
     source      = "/workspace/"
     destination = "/provision"
   }
 
   # Also copy the configuration file to the /etc directory.
   provisioner "file" {
-    only        = [
-      "googlecompute.cloud-cml-amd64",
-    ]
-
     source      = "/workspace/virl2-base-config.yml"
     destination = "/etc/virl2-base-config.yml"
   }
 
   # Make sure cml.sh is executable
   provisioner "shell" {
-    only           = [
-      "googlecompute.cloud-cml-amd64",
-    ]
-
     inline = [
       "chmod u+x /provision/cml.sh",
     ]
   }
 
-  provisioner "shell" {
-    only           = [
-      "googlecompute.cloud-cml-amd64",
-    ]
+  provisioner "breakpoint" {
+    disable = ! local.debug
+    note    = "stop here to debug instance"
+  }
 
+  provisioner "shell" {
     script = var.provision_script
 
     env = { 
@@ -153,16 +138,8 @@ build {
     }
   }
 
-  provisioner "breakpoint" {
-    disable = local.debug
-    note    = "stop here to debug instance"
-  }
-
   post-processor "manifest" {
-    only           = [
-      "googlecompute.cloud-cml-amd64",
-    ]
-    output = "manifest.json"
+   output = "/workspace/manifest.json"
     strip_path = true
     custom_data = {
       timestamp = "{{timestamp}}"

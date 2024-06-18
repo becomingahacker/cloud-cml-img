@@ -32,7 +32,7 @@ steps:
       cat /etc/default/locale
 
       # Build Cisco Modeling Labs image with Packer
-      packer init cloud-cml-gce.pkr.hcl
+      packer init /workspace/cloud-cml-gce.pkr.hcl
       packer validate \
         -var "service_account_email=$SERVICE_ACCOUNT_EMAIL" \
         -var "zone=$ZONE" \
@@ -42,7 +42,7 @@ steps:
         -var "provision_script=$PROVISION_SCRIPT" \
         -var "gcs_artifact_bucket=$GCS_ARTIFACT_BUCKET" \
         -var "cml_package=$CML_PACKAGE" \
-        cloud-cml-gce.pkr.hcl
+        /workspace/cloud-cml-gce.pkr.hcl
       packer build \
         -var "service_account_email=$SERVICE_ACCOUNT_EMAIL" \
         -var "zone=$ZONE" \
@@ -52,11 +52,9 @@ steps:
         -var "provision_script=$PROVISION_SCRIPT" \
         -var "gcs_artifact_bucket=$GCS_ARTIFACT_BUCKET" \
         -var "cml_package=$CML_PACKAGE" \
-        cloud-cml-gce.pkr.hcl
+        /workspace/cloud-cml-gce.pkr.hcl
 
-      jq . manifest.json
-
-      IMAGE=$(jq -r .builds[0].artifact_id manifest.json)
+      jq . /workspace/manifest.json
 
 
 logsBucket: 'gs://bah-build-logs/cloud-cml-img'
