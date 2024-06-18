@@ -127,6 +127,17 @@ build {
     destination = "/etc/virl2-base-config.yml"
   }
 
+  # Make sure cml.sh is executable
+  provisioner "shell" {
+    only           = [
+      "googlecompute.cloud-cml-amd64",
+    ]
+
+    inline = [
+      "chmod u+x /provision/cml.sh",
+    ]
+  }
+
   provisioner "shell" {
     only           = [
       "googlecompute.cloud-cml-amd64",
