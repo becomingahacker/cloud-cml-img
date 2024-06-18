@@ -96,13 +96,11 @@ locals {
   }
 
   cml_config_controller = merge(local.cml_config_template, {
-    hostname      = local.controller_hostname
     is_controller = true
     is_compute    = false
   })
 
   cml_config_compute = merge(local.cml_config_template, {
-      hostname      = compute_hostname
       is_controller = false
       is_compute    = true
   })
