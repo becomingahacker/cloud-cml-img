@@ -31,7 +31,7 @@ timedatectl set-timezone Etc/UTC
 
 touch /tmp/PACKER_BUILD
 
-cml.sh
+./cml.sh
 
 cat > /etc/cloud/clean.d/10-cml-clean <<EOF
 #!/bin/sh -x
