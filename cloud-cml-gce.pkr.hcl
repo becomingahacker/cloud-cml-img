@@ -68,8 +68,8 @@ variable "cml_package" {
 }
 
 locals {
-  debug = false
-  #debug = true
+  #debug = false
+  debug = true
 
   cml_config_template = {
     admins = {
