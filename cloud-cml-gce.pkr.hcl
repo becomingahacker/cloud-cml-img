@@ -77,7 +77,8 @@ source "googlecompute" "cloud-cml-amd64" {
   image_name              = "cloud-cml-{{timestamp}}-amd64"
 
   zone                    = var.zone
-  machine_type            = "n2-highcpu-8"
+  machine_type            = "n2-standard-4"
+  #machine_type            = "n2-highcpu-8"
 
   disk_size               = 32
   disk_type               = "pd-ssd"
@@ -86,6 +87,8 @@ source "googlecompute" "cloud-cml-amd64" {
   ]
 
   ssh_username            = "root"
+  temporary_key_pair_type = "ed25519"
+
   service_account_email   = var.service_account_email
 
   scopes = [
