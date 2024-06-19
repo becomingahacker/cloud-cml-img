@@ -76,6 +76,7 @@ locals {
     admins = {
       controller = {
         username = ""
+        # TODO cmm - what passwords get used during install?
         password = ""
       }
       system = {
@@ -102,8 +103,8 @@ locals {
   })
 
   cml_config_compute = merge(local.cml_config_template, {
-      is_controller = false
-      is_compute    = true
+    is_controller = false
+    is_compute    = true
   })
 
   cloud_init_config_template = {
@@ -202,7 +203,9 @@ source "googlecompute" "cloud-cml-controller-amd64" {
   temporary_key_pair_type = "ed25519"
 
   metadata = {
-    "user-data" = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_controller))
+    # This will prevent the project-wide SSH keys from being added to the instance.
+    "block-project-ssh-keys" = "TRUE"
+    "user-data"              = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_controller))
   }
 
   service_account_email   = var.service_account_email
@@ -237,7 +240,9 @@ source "googlecompute" "cloud-cml-compute-amd64" {
   temporary_key_pair_type = "ed25519"
 
   metadata = {
-    "user-data" = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_compute))
+    # This will prevent the project-wide SSH keys from being added to the instance.
+    "block-project-ssh-keys" = "TRUE"
+    "user-data"              = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_compute))
   }
 
   service_account_email   = var.service_account_email

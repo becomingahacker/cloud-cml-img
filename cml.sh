@@ -66,8 +66,10 @@ function base_setup() {
     # copy CML distribution package from cloud storage into our instance, unpack & install
     copyfile ${CFG_APP_SOFTWARE} /provision/
     tar xvf /provision/${CFG_APP_SOFTWARE} --wildcards -C /tmp 'cml2*_amd64.deb' 'patty*_amd64.deb' 'iol-tools*_amd64.deb'
-    #systemctl stop ssh
+    systemctl stop ssh
     apt-get install -y /tmp/*.deb
+    # TODO cmm - Is this needed?  Is it okay to keep the virl2 processes running while doing the initial setup?
+    systemctl disable --now virl2.target
 
     # HACK cmm - Exit early before configuration.  cml.sh needs features for this.
     exit 0
