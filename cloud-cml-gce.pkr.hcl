@@ -137,6 +137,36 @@ locals {
         apt-get clean
       EOF
     },
+    {
+      path        = "/provision/cml.sh"
+      owner       = "root:root"
+      permissions = "0750"
+      content     = file("/workspace/cml.sh")
+    },
+    {
+      path        = "/provision/common.sh"
+      owner       = "root:root"
+      permissions = "0640"
+      content     = file("/workspace/common.sh")
+    },
+    {
+      path        = "/provision/copyfile.sh"
+      owner       = "root:root"
+      permissions = "0640"
+      content     = file("/workspace/copyfile.sh")
+    },
+    {
+      path        = "/provision/vars.sh"
+      owner       = "root:root"
+      permissions = "0640"
+      content     = file("/workspace/vars.sh")
+    },
+    {
+      path        = "/provision/refplat.json"
+      owner       = "root:root"
+      permissions = "0640"
+      content     = file("/workspace/refplat.json")
+    },
   ]
   cloud_init_config_runcmd_template = [
     "touch /tmp/PACKER_BUILD",
@@ -254,42 +284,30 @@ build {
     "sources.googlecompute.cloud-cml-compute-amd64",
   ]
 
-  # Make sure the /provision directory exists.
-  provisioner "shell" {
-    inline = [
-      "mkdir -vp /provision",
-    ]
-  }
-
-  # Copy everything from the workspace to the /provision directory.
-  provisioner "file" {
-    source      = "/workspace/"
-    destination = "/provision"
-  }
-
   # Let cloud-init finish before running the
-  # main provisioning script.
+  # main provisioning script.  If cloud-init fails,
+  # output the log and stop the build.
   provisioner "shell" {
     inline = [ <<-EOF
-      tail -F /var/log/cloud-init-output.log &
       echo "waiting for cloud-init setup to finish..."
       cloud-init status --wait || true
+
       cloud_init_state="$(cloud-init status | awk '/status:/ { print $2 }')"
-      kill %1
+
       if [ "$cloud_init_state" = "done" ]; then
         echo "cloud-init setup has successfully finished"
       else
         echo "cloud-init setup is in unknown state: $cloud_init_state"
         cloud-init status --long
+        cat /var/log/cloud-init-output.log
+        echo "stopping build..."
         exit 1
       fi
+      
+      echo "Starting main provisioning script..."
+      /provision/cml.sh
     EOF
     ]
-  }
-
-  provisioner "shell" {
-   script = var.provision_script
-
     env = { 
       CFG_GCP_BUCKET  = var.gcs_artifact_bucket
       CFG_CML_PACKAGE = var.cml_package
