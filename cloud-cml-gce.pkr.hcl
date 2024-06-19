@@ -212,7 +212,7 @@ build {
         #echo "Pausing for debugging..."
         #sleep 3600 || true
         echo "DEBUG: Setting root password..."
-        TODO cmm - remove me after networking is no longer broken
+        # TODO cmm - remove me after networking is no longer broken
         echo "root:secret-password-here" | /usr/sbin/chpasswd 
       fi
     EOF
