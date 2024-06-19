@@ -104,6 +104,57 @@ locals {
       is_controller = false
       is_compute    = true
   })
+
+  cloud_init_config_template = {
+    package_update  = true
+    package_upgrade = true
+
+    manage_etc_hosts = true
+  }
+
+  cloud_init_config_packages_template = [
+    "curl",
+    "jq",
+    "frr",
+  ]
+
+  # Empty for now
+  cloud_init_config_write_files_template = [ ]
+  cloud_init_config_runcmd_template = [ ]
+
+  cloud_init_config_controller = merge(local.cloud_init_config_template, {
+    hostname = "cml-controller-build"
+
+    packages = local.cloud_init_config_packages_template
+
+    write_files = concat(local.cloud_init_config_write_files_template, [
+      {
+        path        = "/etc/virl2-base-config.yml"
+        owner       = "root:root"
+        permissions = "0640"
+        content     = yamlencode(local.cml_config_controller)
+      },
+    ])
+
+    runcmd = local.cloud_init_config_runcmd_template
+  })
+
+  cloud_init_config_compute = merge(local.cloud_init_config_template, {
+    hostname = "cml-compute-build"
+
+    packages = local.cloud_init_config_packages_template
+
+    write_files = concat(local.cloud_init_config_write_files_template, [
+      {
+        path        = "/etc/virl2-base-config.yml"
+        owner       = "root:root"
+        permissions = "0640"
+        content     = yamlencode(local.cml_config_compute)
+      },
+    ])
+
+    runcmd = local.cloud_init_config_runcmd_template
+  })
 }
 
 source "googlecompute" "cloud-cml-controller-amd64" {
@@ -129,6 +180,10 @@ source "googlecompute" "cloud-cml-controller-amd64" {
 
   ssh_username            = "root"
   temporary_key_pair_type = "ed25519"
+
+  metadata = {
+    "user-data" = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_controller))
+  }
 
   service_account_email   = var.service_account_email
 
@@ -161,6 +216,10 @@ source "googlecompute" "cloud-cml-compute-amd64" {
   ssh_username            = "root"
   temporary_key_pair_type = "ed25519"
 
+  metadata = {
+    "user-data" = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_compute))
+  }
+
   service_account_email   = var.service_account_email
 
   scopes = [
@@ -186,20 +245,6 @@ build {
   provisioner "file" {
     source      = "/workspace/"
     destination = "/provision"
-  }
-
-  # Copy the controller configuration file to the /etc directory.
-  provisioner "file" {
-    only    = ["googlecompute.cloud-cml-controller-amd64"]
-    content = yamlencode(local.cml_config_controller)
-    destination = "/etc/virl2-base-config.yml"
-  }
-
-  # Copy the compute configuration file to the /etc directory.
-  provisioner "file" {
-    only    = ["googlecompute.cloud-cml-compute-amd64"]
-    content = yamlencode(local.cml_config_compute)
-    destination = "/etc/virl2-base-config.yml"
   }
 
   # Make sure cml.sh is executable and pause for debugging before running the
