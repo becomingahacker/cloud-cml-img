@@ -49,7 +49,7 @@ function base_setup() {
 
         # copy all image definitions as defined in the provisioned config
         if [ $(jq </provision/refplat.json '.images|length') -gt 0 ]; then
-            elems=$(jq </provision/refplat -rc '.images|join(" ")')
+            elems=$(jq </provision/refplat.json -rc '.images|join(" ")')
             for item in $elems; do
                 mkdir -p $VLLI/$IDEF/$item
                 copyfile refplat/$IDEF/$item/ $VLLI/$IDEF $item --recursive
