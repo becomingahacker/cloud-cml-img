@@ -135,7 +135,7 @@ locals {
 
         # Note that the IMDS is there. It's important for cloud-init to run properly
         # during network activation.
-        cat <<EOF > /etc/hosts
+        cat <<EOD > /etc/hosts
         127.0.0.1 localhost
 
         # The following lines are desirable for IPv6 capable hosts
@@ -146,12 +146,15 @@ locals {
         ff02::2 ip6-allrouters
         ff02::3 ip6-allhosts
         169.254.169.254 metadata.google.internal metadata
-        EOF
+        EOD
+
         rm /home/root/.bash_history
         truncate -s 0 /home/root/.ssh/authorized_keys
+
         # Clean up packages that can be removed
         apt-get autoremove --purge -y
         apt-get clean
+
         # Purge the system journal
         journalctl --rotate
         journalctl --vacuum-time=1s
