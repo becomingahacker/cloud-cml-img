@@ -68,8 +68,8 @@ variable "cml_package" {
 }
 
 locals {
-  debug = false
-  #debug = true
+  #debug = false
+  debug = true
 
   cml_config_template = {
     admins = {
@@ -209,8 +209,11 @@ build {
       chmod u+x /provision/cml.sh
 
       if [ "$DEBUG" = "true" ]; then
-        echo "Pausing for debugging..."
-        sleep 3600 || true
+        #echo "Pausing for debugging..."
+        #sleep 3600 || true
+        echo "DEBUG: Setting root password..."
+        TODO cmm - remove me after networking is no longer broken
+        echo "root:secret-password-here" | /usr/sbin/chpasswd 
       fi
     EOF
     ]
