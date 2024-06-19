@@ -119,6 +119,7 @@ source "googlecompute" "cloud-cml-controller-amd64" {
   zone                    = var.zone
   machine_type            = "n2-standard-4"
   #machine_type            = "n2-highcpu-8"
+  enable_secure_boot      = true
 
   disk_size               = 32
   disk_type               = "pd-ssd"
@@ -149,6 +150,7 @@ source "googlecompute" "cloud-cml-compute-amd64" {
   zone                    = var.zone
   machine_type            = "n2-standard-4"
   #machine_type            = "n2-highcpu-8"
+  enable_secure_boot      = true
 
   disk_size               = 32
   disk_type               = "pd-ssd"
