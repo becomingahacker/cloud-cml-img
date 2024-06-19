@@ -70,6 +70,7 @@ variable "cml_package" {
 locals {
   #debug = false
   debug = true
+  skip_image_creation = false
 
   cml_config_template = {
     admins = {
@@ -159,7 +160,7 @@ locals {
 
 source "googlecompute" "cloud-cml-controller-amd64" {
 
-  skip_create_image       = local.debug
+  skip_create_image       = local.skip_image_creation
 
   project_id              = var.project_id
   source_image_family     = var.source_image_family
@@ -194,7 +195,7 @@ source "googlecompute" "cloud-cml-controller-amd64" {
 
 source "googlecompute" "cloud-cml-compute-amd64" {
 
-  skip_create_image       = local.debug
+  skip_create_image       = local.skip_image_creation
 
   project_id              = var.project_id
   source_image_family     = var.source_image_family

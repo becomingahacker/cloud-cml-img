@@ -59,9 +59,8 @@ steps:
         -var "provision_script=$PROVISION_SCRIPT" \
         -var "gcs_artifact_bucket=$GCS_ARTIFACT_BUCKET" \
         -var "cml_package=$CML_PACKAGE" \
-        /workspace/cloud-cml-gce.pkr.hcl
-
-      jq . /workspace/manifest.json
+        /workspace/cloud-cml-gce.pkr.hcl && \
+        jq . /workspace/manifest.json
 
 
 logsBucket: 'gs://bah-build-logs/cloud-cml-img'
