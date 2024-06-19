@@ -51,7 +51,7 @@ variable "source_image_project_id" {
 
 variable "provision_script" {
     type        = string
-    default     = "setup.sh"
+    default     = "cml.sh"
     description = "Provisioning script"
 }
 
@@ -107,10 +107,12 @@ locals {
   })
 
   cloud_init_config_template = {
-    package_update  = true
-    package_upgrade = true
+    package_update   = true
+    package_upgrade  = true
 
     manage_etc_hosts = true
+    locale           = "en_US.UTF-8"
+    timezone         = "Etc/UTC"
   }
 
   cloud_init_config_packages_template = [
@@ -119,9 +121,26 @@ locals {
     "frr",
   ]
 
-  # Empty for now
-  cloud_init_config_write_files_template = [ ]
-  cloud_init_config_runcmd_template = [ ]
+  cloud_init_config_write_files_template = [
+    {
+      path        = "/etc/cloud/clean.d/10-cml-clean"
+      owner       = "root:root"
+      permissions = "0755"
+      content     = <<-EOF
+        #!/bin/sh -x
+        sudo rm /etc/hosts
+        sudo rm /etc/hostname
+        sudo rm /home/root/.bash_history
+        sudo truncate -s 0 /home/root/.ssh/authorized_keys
+        # Clean up packages that can be removed
+        apt-get autoremove --purge -y
+        apt-get clean
+      EOF
+    },
+  ]
+  cloud_init_config_runcmd_template = [
+    "touch /tmp/PACKER_BUILD",
+  ]
 
   cloud_init_config_controller = merge(local.cloud_init_config_template, {
     hostname = "cml-controller-build"
@@ -248,15 +267,15 @@ build {
     destination = "/provision"
   }
 
-  # Make sure cml.sh is executable and pause for debugging before running the
+  # Let cloud-init finish before running the
   # main provisioning script.
   provisioner "shell" {
     inline = [ <<-EOF
-      chmod u+x /provision/cml.sh
-
+      tail -F /var/log/cloud-init-output.log &
       echo "waiting for cloud-init setup to finish..."
       cloud-init status --wait || true
       cloud_init_state="$(cloud-init status | awk '/status:/ { print $2 }')"
+      kill %1
       if [ "$cloud_init_state" = "done" ]; then
         echo "cloud-init setup has successfully finished"
       else
@@ -264,30 +283,24 @@ build {
         cloud-init status --long
         exit 1
       fi
-
-      if [ "$DEBUG" = "true" ]; then
-        #echo "Pausing for debugging..."
-        #sleep 3600 || true
-        echo "DEBUG: Setting root password..."
-        # TODO cmm - remove me after networking is no longer broken
-        echo "root:secret-password-here" | /usr/sbin/chpasswd 
-      fi
     EOF
     ]
-    env = {
-      DEBUG = local.debug
-    }
   }
 
   provisioner "shell" {
-    script = var.provision_script
+   script = var.provision_script
 
     env = { 
-      APT_OPTS        = "-o Dpkg::Options::=--force-confmiss -o Dpkg::Options::=--force-confnew -o DPkg::Progress-Fancy=0 -o APT::Color=0"
-      DEBIAN_FRONTEND = "noninteractive"
       CFG_GCP_BUCKET  = var.gcs_artifact_bucket
       CFG_CML_PACKAGE = var.cml_package
     }
+  }
+
+  # Clean up all cloud-init data.
+  provisioner "shell" {
+    inline = [
+      "cloud-init clean -c all -l --machine-id",
+    ]
   }
 
   post-processor "manifest" {
