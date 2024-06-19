@@ -137,36 +137,6 @@ locals {
         apt-get clean
       EOF
     },
-    {
-      path        = "/provision/cml.sh"
-      owner       = "root:root"
-      permissions = "0750"
-      content     = file("/workspace/cml.sh")
-    },
-    {
-      path        = "/provision/common.sh"
-      owner       = "root:root"
-      permissions = "0640"
-      content     = file("/workspace/common.sh")
-    },
-    {
-      path        = "/provision/copyfile.sh"
-      owner       = "root:root"
-      permissions = "0640"
-      content     = file("/workspace/copyfile.sh")
-    },
-    {
-      path        = "/provision/vars.sh"
-      owner       = "root:root"
-      permissions = "0640"
-      content     = file("/workspace/vars.sh")
-    },
-    {
-      path        = "/provision/refplat.json"
-      owner       = "root:root"
-      permissions = "0640"
-      content     = file("/workspace/refplat.json")
-    },
   ]
   cloud_init_config_runcmd_template = [
     "touch /tmp/PACKER_BUILD",
@@ -284,6 +254,37 @@ build {
     "sources.googlecompute.cloud-cml-compute-amd64",
   ]
 
+  provisioner "shell" {
+    inline = [ "mkdir -vp /provision" ]
+  }
+
+  # These are files copied here, rather than in the cloud-init because we don't
+  # want to do any YAML encoding/processing on them.
+  provisioner "file" {
+    source      = "/workspace/cml.sh"
+    destination = "/provision/cml.sh"
+  }
+
+  provisioner "file" {
+    source      = "/workspace/common.sh"
+    destination = "/provision/common.sh"
+  }
+
+  provisioner "file" {
+    source      = "/workspace/copyfile.sh"
+    destination = "/provision/copyfile.sh"
+  }
+
+  provisioner "file" {
+    source      = "/workspace/vars.sh"
+    destination = "/provision/vars.sh"
+  }
+
+  provisioner "file" {
+    source      = "/workspace/refplat.json"
+    destination = "/provision/refplat.json"
+  }
+
   # Let cloud-init finish before running the
   # main provisioning script.  If cloud-init fails,
   # output the log and stop the build.
@@ -305,7 +306,12 @@ build {
       fi
       
       echo "Starting main provisioning script..."
+      chmod u+x /provision/cml.sh
       /provision/cml.sh
+      
+      echo "Save machine-id (default password) for future use..."
+      cp /etc/machine-id /provision/saved-machine-id
+      chmod 0600 /provision/saved-machine-id
     EOF
     ]
     env = { 
