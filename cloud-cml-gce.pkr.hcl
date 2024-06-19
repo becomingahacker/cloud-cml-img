@@ -169,7 +169,7 @@ source "googlecompute" "cloud-cml-controller-amd64" {
 
   zone                    = var.zone
   machine_type            = "n2-standard-4"
-  #machine_type            = "n2-highcpu-8"
+  # This will make the VM boot in UEFI mode from this image forward.
   enable_secure_boot      = true
 
   disk_size               = 32
@@ -204,7 +204,7 @@ source "googlecompute" "cloud-cml-compute-amd64" {
 
   zone                    = var.zone
   machine_type            = "n2-standard-4"
-  #machine_type            = "n2-highcpu-8"
+  # This will make the VM boot in UEFI mode from this image forward.
   enable_secure_boot      = true
 
   disk_size               = 32
@@ -252,6 +252,17 @@ build {
   provisioner "shell" {
     inline = [ <<-EOF
       chmod u+x /provision/cml.sh
+
+      echo "waiting for cloud-init setup to finish..."
+      cloud-init status --wait || true
+      cloud_init_state="$(cloud-init status | awk '/status:/ { print $2 }')"
+      if [ "$cloud_init_state" = "done" ]; then
+        echo "cloud-init setup has successfully finished"
+      else
+        echo "cloud-init setup is in unknown state: $cloud_init_state"
+        cloud-init status --long
+        exit 1
+      fi
 
       if [ "$DEBUG" = "true" ]; then
         #echo "Pausing for debugging..."
