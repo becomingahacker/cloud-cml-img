@@ -136,6 +136,9 @@ locals {
         # Clean up packages that can be removed
         apt-get autoremove --purge -y
         apt-get clean
+        # Purge the system journal
+        journalctl --rotate
+        journalctl --vacuum-time=1s
       EOF
     },
   ]
