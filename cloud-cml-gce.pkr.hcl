@@ -351,6 +351,7 @@ build {
   provisioner "shell" {
     inline = [
       "cloud-init clean -c all -l --machine-id",
+      "rm -rf /var/lib/cloud",
     ]
   }
 
