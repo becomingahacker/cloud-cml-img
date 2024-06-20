@@ -69,12 +69,13 @@ function base_setup() {
     systemctl stop ssh
     apt-get install -y /tmp/*.deb
 
-    if [ -f /etc/netplan/50-cloud-init.yaml ]; then
-        # Fixing NetworkManager in netplan, and interface association in virl2-base-config.yml
-        /provision/interface_fix.py
-        systemctl restart network-manager
-        netplan apply
-    fi
+    # HACK cmm - Disable interface_fix.py
+    #if [ -f /etc/netplan/50-cloud-init.yaml ]; then
+    #    # Fixing NetworkManager in netplan, and interface association in virl2-base-config.yml
+    #    /provision/interface_fix.py
+    #    systemctl restart network-manager
+    #    netplan apply
+    #fi
 
     # HACK cmm - Disable firewalld to break a dependency loop 
     systemctl disable firewalld
