@@ -68,18 +68,19 @@ function base_setup() {
     tar xvf /provision/${CFG_APP_SOFTWARE} --wildcards -C /tmp 'cml2*_amd64.deb' 'patty*_amd64.deb' 'iol-tools*_amd64.deb'
     systemctl stop ssh
     apt-get install -y /tmp/*.deb
-    # TODO cmm - Is this needed?  Is it okay to keep the virl2 processes running while doing the initial setup?
-    systemctl disable --now virl2.target
 
-    # HACK cmm - Exit early before configuration.  cml.sh needs features for this.
-    exit 0
-    
     if [ -f /etc/netplan/50-cloud-init.yaml ]; then
         # Fixing NetworkManager in netplan, and interface association in virl2-base-config.yml
         /provision/interface_fix.py
         systemctl restart network-manager
         netplan apply
     fi
+
+    # HACK cmm - Disable firewalld to break a dependency loop 
+    systemctl disable firewalld
+    # HACK cmm - Exit early before configuration.  cml.sh needs features for this.
+    exit 0
+
     # Fix for the headless setup (tty remove as the cloud VM has none)
     sed -i '/^Standard/ s/^/#/' /lib/systemd/system/virl2-initial-setup.service
     touch /etc/.virl2_unconfigured
