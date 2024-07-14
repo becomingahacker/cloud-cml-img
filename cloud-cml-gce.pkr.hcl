@@ -61,10 +61,10 @@ variable "gcs_artifact_bucket" {
     description = "GCS bucket to retrieve artifacts, e.g. gs://bah-machine-images"
 }
 
-variable "cml_package" {
+variable "cml_package_path" {
     type        = string
     default     = ""
-    description = "CML package, e.g. cml2_2.7.0-4_amd64-20.pkg"
+    description = "CML package path in bucket, e.g. cml2/cml2_2.7.0-4_amd64-20.pkg"
 }
 
 locals {
@@ -343,7 +343,7 @@ build {
     ]
     env = { 
       CFG_GCP_BUCKET  = var.gcs_artifact_bucket
-      CFG_CML_PACKAGE = var.cml_package
+      CFG_CML_PACKAGE = var.cml_package_path
     }
   }
 
