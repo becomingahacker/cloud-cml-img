@@ -344,7 +344,7 @@ build {
       %{ if local.debug }
       /provision/cml.sh || echo Failed, sleeping... && find /var/log/virl2 -type f -exec cat {} \; && sleep 9999
       %{ else }
-      /provision/cml.sh && find /var/log/virl2 -type f -exec cat {} \;
+      /provision/cml.sh && find /var/log/virl2 -type f -exec cat {} \; && false
       %{ endif }
       
       echo "Save machine-id (default password) for future use..."
