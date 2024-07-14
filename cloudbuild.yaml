@@ -7,12 +7,16 @@
 steps:
   - name: 'us-east1-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img'
     env:
+      # If set to true, the build will pause on failures and allow project-level 
+      # SSH keys to Packer machines.  Depending on the stage of install failuare,
+      # SSH might be listening on port 1122.
+      - 'DEBUG=false'
+      - 'PACKER_LOG=0'
       - 'SOURCE_IMAGE_FAMILY=ubuntu-2004-lts'
       - 'SOURCE_IMAGE_PROJECT_ID=ubuntu-os-cloud'
       - 'PROVISION_SCRIPT=cml.sh'
       - 'GCS_ARTIFACT_BUCKET=bah-machine-images'
       - 'CML_PACKAGE_PATH=cml2/cml2_2.7.1-20_amd64-25.pkg'
-      - 'PACKER_LOG=0'
       - 'LOCATION=$LOCATION'
       - 'PROJECT_ID=$PROJECT_ID'
       - 'LOCATION=${LOCATION}'
@@ -36,6 +40,7 @@ steps:
       # Build Cisco Modeling Labs image with Packer
       packer init /workspace/cloud-cml-gce.pkr.hcl
       packer validate \
+        -var "debug=$DEBUG" \
         -var "service_account_email=$SERVICE_ACCOUNT_EMAIL" \
         -var "location=$LOCATION" \
         -var "zone=$ZONE" \
@@ -47,6 +52,7 @@ steps:
         -var "cml_package_path=$CML_PACKAGE_PATH" \
         /workspace/cloud-cml-gce.pkr.hcl
       packer build \
+        -var "debug=$DEBUG" \
         -var "service_account_email=$SERVICE_ACCOUNT_EMAIL" \
         -var "location=$LOCATION" \
         -var "zone=$ZONE" \

@@ -5,8 +5,7 @@
 #
 
 locals {
-  # If set to true, the build will pause on failures and allow project-level SSH keys to Packer machines.
-  debug               = false
+  debug               = var.debug
   #debug               = true
   skip_image_creation = false
 
@@ -145,6 +144,13 @@ packer {
       version = "~> 1"
     }
   }
+}
+
+variable "debug" {
+  type        = bool
+  default     = false
+  description = "Whether to do a debug build or not.  If set to true, the build
+    will pause on failures and allow project-level SSH keys to Packer machines."
 }
 
 variable "project_id" {
