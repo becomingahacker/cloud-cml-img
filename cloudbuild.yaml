@@ -4,8 +4,6 @@
 # All rights reserved.
 #
 
-
-
 steps:
   - name: 'us-east1-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img'
     env:
@@ -13,7 +11,7 @@ steps:
       - 'SOURCE_IMAGE_PROJECT_ID=ubuntu-os-cloud'
       - 'PROVISION_SCRIPT=cml.sh'
       - 'GCS_ARTIFACT_BUCKET=bah-machine-images'
-      - 'CML_PACKAGE=cml2_2.7.0-4_amd64-20.pkg'
+      - 'CML_PACKAGE_PATH=cml/cml2_2.7.1-20_amd64-25.pkg'
       - 'PACKER_LOG=0'
       - 'LOCATION=$LOCATION'
       - 'PROJECT_ID=$PROJECT_ID'
@@ -45,7 +43,7 @@ steps:
         -var "source_image_project_id=$SOURCE_IMAGE_PROJECT_ID" \
         -var "provision_script=$PROVISION_SCRIPT" \
         -var "gcs_artifact_bucket=$GCS_ARTIFACT_BUCKET" \
-        -var "cml_package=$CML_PACKAGE" \
+        -var "cml_package_path=$CML_PACKAGE_PATH" \
         /workspace/cloud-cml-gce.pkr.hcl
       packer build \
         -var "service_account_email=$SERVICE_ACCOUNT_EMAIL" \
@@ -56,7 +54,7 @@ steps:
         -var "source_image_project_id=$SOURCE_IMAGE_PROJECT_ID" \
         -var "provision_script=$PROVISION_SCRIPT" \
         -var "gcs_artifact_bucket=$GCS_ARTIFACT_BUCKET" \
-        -var "cml_package=$CML_PACKAGE" \
+        -var "cml_package_path=$CML_PACKAGE_PATH" \
         /workspace/cloud-cml-gce.pkr.hcl
 
       # If packer creates artifacts, list them
