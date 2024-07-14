@@ -113,20 +113,11 @@ locals {
 
     manage_etc_hosts = true
 
-    # HACK cmm - Locale configuration is currently broken on cloud init.  Leave it out for now.
-    # googlecompute.cloud-cml-controller-amd64: detail: DataSourceGCELocal
-    # googlecompute.cloud-cml-controller-amd64: errors:
-    # googlecompute.cloud-cml-controller-amd64: 	- ('locale', ProcessExecutionError("Unexpected error while running command.\nCommand: ['locale-gen', 'en_US.UTF-8']\nExit code: -\nReason: [Errno 2] No such file or directory: b'locale-gen'\nStdout: -\nStderr: -"))
-    # googlecompute.cloud-cml-controller-amd64: recoverable_errors:
-    # googlecompute.cloud-cml-controller-amd64: WARNING:
-    # googlecompute.cloud-cml-controller-amd64: 	- Running module locale (<module 'cloudinit.config.cc_locale' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_locale.py'>) failed
-
     locale           = "en_US.UTF-8"
     timezone         = "Etc/UTC"
   }
 
   cloud_init_config_packages_template = [
-    "locales",
     "curl",
     "jq",
     "frr",
