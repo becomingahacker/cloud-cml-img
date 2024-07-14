@@ -5,8 +5,6 @@
 #
 
 locals {
-  debug               = var.debug
-  #debug               = true
   skip_image_creation = false
 
   cml_config_template = {
@@ -236,7 +234,7 @@ source "googlecompute" "cloud-cml-controller-amd64" {
 
   metadata = {
     # This will prevent the project-wide SSH keys from being added to the instance.
-    "block-project-ssh-keys" = ! local.debug ? "TRUE" : "FALSE"
+    "block-project-ssh-keys" = ! var.debug ? "TRUE" : "FALSE"
     "user-data"              = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_controller))
   }
 
@@ -273,7 +271,7 @@ source "googlecompute" "cloud-cml-compute-amd64" {
 
   metadata = {
     # This will prevent the project-wide SSH keys from being added to the instance.
-    "block-project-ssh-keys" = ! local.debug ? "TRUE" : "FALSE"
+    "block-project-ssh-keys" = ! var.debug ? "TRUE" : "FALSE"
     "user-data"              = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_compute))
   }
 
@@ -349,10 +347,12 @@ build {
       
       echo "Starting main provisioning script..."
       chmod u+x /provision/cml.sh
-      if [ ! /provision/cml.sh ]; then 
+      if /provision/cml.sh; then 
+        echo "Success!"
+      else
         echo "Failed, displaying CML logs and stopping build..."
         find /var/log/virl2 -type f -printf '=== %p ===\n' -exec cat {} \;
-      %{ if local.debug }
+      %{ if var.debug }
         echo "Debugging enabled, pausing build..."
         sleep 99999
       %{ endif }

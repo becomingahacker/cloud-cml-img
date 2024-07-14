@@ -10,7 +10,7 @@ steps:
       # If set to true, the build will pause on failures and allow project-level 
       # SSH keys to Packer machines.  Depending on the stage of install failuare,
       # SSH might be listening on port 1122.
-      - 'DEBUG=false'
+      - 'DEBUG=true'
       - 'PACKER_LOG=0'
       - 'SOURCE_IMAGE_FAMILY=ubuntu-2004-lts'
       - 'SOURCE_IMAGE_PROJECT_ID=ubuntu-os-cloud'
