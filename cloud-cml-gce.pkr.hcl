@@ -289,6 +289,11 @@ build {
   # These are files copied here, rather than in the cloud-init because we don't
   # want to do any YAML encoding/processing on them.
   provisioner "file" {
+    source      = "/workspace/build-git-ref.txt"
+    destination = "/provision/build-git-ref.txt"
+  }
+
+  provisioner "file" {
     source      = "/workspace/cml.sh"
     destination = "/provision/cml.sh"
   }

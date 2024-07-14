@@ -7,7 +7,7 @@
 steps:
   - name: 'us-east1-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img'
     env:
-      - 'SOURCE_IMAGE_FAMILY=ubuntu-2404-lts-amd64'
+      - 'SOURCE_IMAGE_FAMILY=ubuntu-2004-lts'
       - 'SOURCE_IMAGE_PROJECT_ID=ubuntu-os-cloud'
       - 'PROVISION_SCRIPT=cml.sh'
       - 'GCS_ARTIFACT_BUCKET=bah-machine-images'
@@ -31,6 +31,9 @@ steps:
 
       echo "Locale settings:"
       cat /etc/default/locale
+
+      cd /workspace
+      git describe --all --long --tags --dirty 2>/dev/null | cut -d '/' -f 2 > /workspace/build-git-ref.txt
 
       # Build Cisco Modeling Labs image with Packer
       packer init /workspace/cloud-cml-gce.pkr.hcl
