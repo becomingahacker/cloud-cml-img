@@ -226,7 +226,7 @@ source "googlecompute" "cloud-cml-controller-amd64" {
 
   metadata = {
     # This will prevent the project-wide SSH keys from being added to the instance.
-    "block-project-ssh-keys" = local.debug ? "TRUE" : "FALSE"
+    "block-project-ssh-keys" = ! local.debug ? "TRUE" : "FALSE"
     "user-data"              = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_controller))
   }
 
@@ -263,7 +263,7 @@ source "googlecompute" "cloud-cml-compute-amd64" {
 
   metadata = {
     # This will prevent the project-wide SSH keys from being added to the instance.
-    "block-project-ssh-keys" = local.debug ? "TRUE" : "FALSE"
+    "block-project-ssh-keys" = ! local.debug ? "TRUE" : "FALSE"
     "user-data"              = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_compute))
   }
 
