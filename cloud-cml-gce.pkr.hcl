@@ -149,8 +149,10 @@ packer {
 variable "debug" {
   type        = bool
   default     = false
-  description = "Whether to do a debug build or not.  If set to true, the build
-    will pause on failures and allow project-level SSH keys to Packer machines."
+  description = <<-EOF
+    Whether to do a debug build or not.  If set to true, the build
+    will pause on failures and allow project-level SSH keys to Packer machines.
+  EOF
 }
 
 variable "project_id" {
