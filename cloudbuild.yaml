@@ -27,8 +27,6 @@ steps:
       set -e
       #set -x
 
-      env
-
       echo "Locale settings:"
       cat /etc/default/locale
 

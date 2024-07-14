@@ -68,7 +68,7 @@ variable "cml_package_path" {
 }
 
 locals {
-  #debug = false
+  #debug               = false
   debug               = true
   skip_image_creation = false
 
@@ -76,7 +76,6 @@ locals {
     admins = {
       controller = {
         username = ""
-        # TODO cmm - what passwords get used during install?
         password = ""
       }
       system = {
@@ -227,7 +226,7 @@ source "googlecompute" "cloud-cml-controller-amd64" {
 
   metadata = {
     # This will prevent the project-wide SSH keys from being added to the instance.
-    "block-project-ssh-keys" = "TRUE"
+    "block-project-ssh-keys" = local.debug ? "TRUE" : "FALSE"
     "user-data"              = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_controller))
   }
 
@@ -264,7 +263,7 @@ source "googlecompute" "cloud-cml-compute-amd64" {
 
   metadata = {
     # This will prevent the project-wide SSH keys from being added to the instance.
-    "block-project-ssh-keys" = "TRUE"
+    "block-project-ssh-keys" = local.debug ? "TRUE" : "FALSE"
     "user-data"              = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_compute))
   }
 
@@ -340,7 +339,7 @@ build {
       
       echo "Starting main provisioning script..."
       chmod u+x /provision/cml.sh
-      /provision/cml.sh
+      %{ if local.debug }/provision/cml.sh || echo Failed, sleeping... && sleep 9999%{ else }/provision/cml.sh%{ endif }
       
       echo "Save machine-id (default password) for future use..."
       cp /etc/machine-id /provision/saved-machine-id
