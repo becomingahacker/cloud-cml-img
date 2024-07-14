@@ -7,7 +7,7 @@
 steps:
   - name: 'us-east1-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img'
     env:
-      - 'SOURCE_IMAGE_FAMILY=ubuntu-2404-lts'
+      - 'SOURCE_IMAGE_FAMILY=ubuntu-minimal-2404-lts-amd64'
       - 'SOURCE_IMAGE_PROJECT_ID=ubuntu-os-cloud'
       - 'PROVISION_SCRIPT=cml.sh'
       - 'GCS_ARTIFACT_BUCKET=bah-machine-images'
