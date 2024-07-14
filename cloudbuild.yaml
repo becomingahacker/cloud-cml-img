@@ -11,7 +11,7 @@ steps:
       - 'SOURCE_IMAGE_PROJECT_ID=ubuntu-os-cloud'
       - 'PROVISION_SCRIPT=cml.sh'
       - 'GCS_ARTIFACT_BUCKET=bah-machine-images'
-      - 'CML_PACKAGE_PATH=cml/cml2_2.7.1-20_amd64-25.pkg'
+      - 'CML_PACKAGE_PATH=cml2/cml2_2.7.1-20_amd64-25.pkg'
       - 'PACKER_LOG=0'
       - 'LOCATION=$LOCATION'
       - 'PROJECT_ID=$PROJECT_ID'
