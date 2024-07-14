@@ -14,62 +14,62 @@ packer {
 }
 
 variable "project_id" {
-    type        = string
-    default     = ""
-    description = "Project ID, e.g. gcp-asigbahgcp-nprd-47930"
+  type        = string
+  default     = ""
+  description = "Project ID, e.g. gcp-asigbahgcp-nprd-47930"
 }
 
 variable "location" {
-    type        = string
-    default     = ""
-    description = "Region, e.g. us-east1"
+  type        = string
+  default     = ""
+  description = "Region, e.g. us-east1"
 }
 
 variable "zone" {
-    type        = string
-    default     = ""
-    description = "Zone, e.g. us-east1-b"
+  type        = string
+  default     = ""
+  description = "Zone, e.g. us-east1-b"
 }
 
 variable "service_account_email" {
-    type        = string
-    default     = ""
-    description = "Service account to use while building."
+  type        = string
+  default     = ""
+  description = "Service account to use while building."
 }
 
 variable "source_image_family" {
-    type        = string
-    default     = ""
-    description = "Parent image family, e.g. ubuntu-2004-lts"
+  type        = string
+  default     = ""
+  description = "Parent image family, e.g. ubuntu-2004-lts"
 }
 
 variable "source_image_project_id" {
-    type        = string
-    default     = ""
-    description = "Parent image project, e.g. ubuntu-os-cloud"
+  type        = string
+  default     = ""
+  description = "Parent image project, e.g. ubuntu-os-cloud"
 }
 
 variable "provision_script" {
-    type        = string
-    default     = "cml.sh"
-    description = "Provisioning script"
+  type        = string
+  default     = "cml.sh"
+  description = "Provisioning script"
 }
 
 variable "gcs_artifact_bucket" {
-    type        = string
-    default     = ""
-    description = "GCS bucket to retrieve artifacts, e.g. gs://bah-machine-images"
+  type        = string
+  default     = ""
+  description = "GCS bucket to retrieve artifacts, e.g. gs://bah-machine-images"
 }
 
 variable "cml_package_path" {
-    type        = string
-    default     = ""
-    description = "CML package path in bucket, e.g. cml2/cml2_2.7.0-4_amd64-20.pkg"
+  type        = string
+  default     = ""
+  description = "CML package path in bucket, e.g. cml2/cml2_2.7.0-4_amd64-20.pkg"
 }
 
 locals {
   #debug = false
-  debug = true
+  debug               = true
   skip_image_creation = false
 
   cml_config_template = {
@@ -108,8 +108,8 @@ locals {
   })
 
   cloud_init_config_template = {
-    package_update   = true
-    package_upgrade  = true
+    package_update  = true
+    package_upgrade = true
 
     manage_etc_hosts = true
     locale           = "en_US.UTF-8"
@@ -202,21 +202,21 @@ locals {
 
 source "googlecompute" "cloud-cml-controller-amd64" {
 
-  skip_create_image       = local.skip_image_creation
+  skip_create_image = local.skip_image_creation
 
   project_id              = var.project_id
   source_image_family     = var.source_image_family
-  source_image_project_id = [ var.source_image_project_id ]
+  source_image_project_id = [var.source_image_project_id]
   image_family            = "cloud-cml-controller-amd64"
   image_name              = "cloud-cml-controller-{{timestamp}}-amd64"
 
-  zone                    = var.zone
-  machine_type            = "n2-standard-4"
+  zone         = var.zone
+  machine_type = "n2-standard-4"
   # This will make the VM boot in UEFI mode from this image forward.
-  enable_secure_boot      = true
+  enable_secure_boot = true
 
-  disk_size               = 32
-  disk_type               = "pd-ssd"
+  disk_size = 32
+  disk_type = "pd-ssd"
   image_storage_locations = [
     var.location,
   ]
@@ -230,7 +230,7 @@ source "googlecompute" "cloud-cml-controller-amd64" {
     "user-data"              = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_controller))
   }
 
-  service_account_email   = var.service_account_email
+  service_account_email = var.service_account_email
 
   scopes = [
     "https://www.googleapis.com/auth/cloud-platform",
@@ -239,21 +239,21 @@ source "googlecompute" "cloud-cml-controller-amd64" {
 
 source "googlecompute" "cloud-cml-compute-amd64" {
 
-  skip_create_image       = local.skip_image_creation
+  skip_create_image = local.skip_image_creation
 
   project_id              = var.project_id
   source_image_family     = var.source_image_family
-  source_image_project_id = [ var.source_image_project_id ]
+  source_image_project_id = [var.source_image_project_id]
   image_family            = "cloud-cml-compute-amd64"
   image_name              = "cloud-cml-compute-{{timestamp}}-amd64"
 
-  zone                    = var.zone
-  machine_type            = "n2-standard-4"
+  zone         = var.zone
+  machine_type = "n2-standard-4"
   # This will make the VM boot in UEFI mode from this image forward.
-  enable_secure_boot      = true
+  enable_secure_boot = true
 
-  disk_size               = 32
-  disk_type               = "pd-ssd"
+  disk_size = 32
+  disk_type = "pd-ssd"
   image_storage_locations = [
     var.location,
   ]
@@ -267,7 +267,7 @@ source "googlecompute" "cloud-cml-compute-amd64" {
     "user-data"              = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_compute))
   }
 
-  service_account_email   = var.service_account_email
+  service_account_email = var.service_account_email
 
   scopes = [
     "https://www.googleapis.com/auth/cloud-platform",
@@ -282,7 +282,7 @@ build {
   ]
 
   provisioner "shell" {
-    inline = [ "mkdir -vp /provision" ]
+    inline = ["mkdir -vp /provision"]
   }
 
   # These are files copied here, rather than in the cloud-init because we don't
@@ -316,7 +316,7 @@ build {
   # main provisioning script.  If cloud-init fails,
   # output the log and stop the build.
   provisioner "shell" {
-    inline = [ <<-EOF
+    inline = [<<-EOF
       echo "waiting for cloud-init setup to finish..."
       cloud-init status --wait || true
 
@@ -341,9 +341,9 @@ build {
       chmod 0600 /provision/saved-machine-id
     EOF
     ]
-    env = { 
-      CFG_GCP_BUCKET  = var.gcs_artifact_bucket
-      CFG_CML_PACKAGE = var.cml_package_path
+    env = {
+      CFG_GCP_BUCKET       = var.gcs_artifact_bucket
+      CFG_CML_PACKAGE_PATH = var.cml_package_path
     }
   }
 
@@ -356,7 +356,7 @@ build {
   }
 
   post-processor "manifest" {
-   output = "/workspace/manifest.json"
+    output     = "/workspace/manifest.json"
     strip_path = true
     #custom_data = {
     #  foo = "bar"

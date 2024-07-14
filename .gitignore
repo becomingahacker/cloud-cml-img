@@ -5,3 +5,4 @@ terraform.tfstate*
 *.swp
 .DS_Store
 tfplan*
+__DO_NOT_COMMIT*
