@@ -4,72 +4,10 @@
 # All rights reserved.
 #
 
-packer {
-  required_plugins {
-    googlecompute = {
-      source  = "github.com/hashicorp/googlecompute"
-      version = "~> 1"
-    }
-  }
-}
-
-variable "project_id" {
-  type        = string
-  default     = ""
-  description = "Project ID, e.g. gcp-asigbahgcp-nprd-47930"
-}
-
-variable "location" {
-  type        = string
-  default     = ""
-  description = "Region, e.g. us-east1"
-}
-
-variable "zone" {
-  type        = string
-  default     = ""
-  description = "Zone, e.g. us-east1-b"
-}
-
-variable "service_account_email" {
-  type        = string
-  default     = ""
-  description = "Service account to use while building."
-}
-
-variable "source_image_family" {
-  type        = string
-  default     = ""
-  description = "Parent image family, e.g. ubuntu-2004-lts"
-}
-
-variable "source_image_project_id" {
-  type        = string
-  default     = ""
-  description = "Parent image project, e.g. ubuntu-os-cloud"
-}
-
-variable "provision_script" {
-  type        = string
-  default     = "cml.sh"
-  description = "Provisioning script"
-}
-
-variable "gcs_artifact_bucket" {
-  type        = string
-  default     = ""
-  description = "GCS bucket to retrieve artifacts, e.g. gs://bah-machine-images"
-}
-
-variable "cml_package_path" {
-  type        = string
-  default     = ""
-  description = "CML package path in bucket, e.g. cml2/cml2_2.7.0-4_amd64-20.pkg"
-}
-
 locals {
-  #debug               = false
-  debug               = true
+  # If set to true, the build will pause on failures and allow project-level SSH keys to Packer machines.
+  debug               = false
+  #debug               = true
   skip_image_creation = false
 
   cml_config_template = {
@@ -199,6 +137,70 @@ locals {
     runcmd = local.cloud_init_config_runcmd_template
   })
 }
+
+packer {
+  required_plugins {
+    googlecompute = {
+      source  = "github.com/hashicorp/googlecompute"
+      version = "~> 1"
+    }
+  }
+}
+
+variable "project_id" {
+  type        = string
+  default     = ""
+  description = "Project ID, e.g. gcp-asigbahgcp-nprd-47930"
+}
+
+variable "location" {
+  type        = string
+  default     = ""
+  description = "Region, e.g. us-east1"
+}
+
+variable "zone" {
+  type        = string
+  default     = ""
+  description = "Zone, e.g. us-east1-b"
+}
+
+variable "service_account_email" {
+  type        = string
+  default     = ""
+  description = "Service account to use while building."
+}
+
+variable "source_image_family" {
+  type        = string
+  default     = ""
+  description = "Parent image family, e.g. ubuntu-2004-lts"
+}
+
+variable "source_image_project_id" {
+  type        = string
+  default     = ""
+  description = "Parent image project, e.g. ubuntu-os-cloud"
+}
+
+variable "provision_script" {
+  type        = string
+  default     = "cml.sh"
+  description = "Provisioning script"
+}
+
+variable "gcs_artifact_bucket" {
+  type        = string
+  default     = ""
+  description = "GCS bucket to retrieve artifacts, e.g. gs://bah-machine-images"
+}
+
+variable "cml_package_path" {
+  type        = string
+  default     = ""
+  description = "CML package path in bucket, e.g. cml2/cml2_2.7.0-4_amd64-20.pkg"
+}
+
 
 source "googlecompute" "cloud-cml-controller-amd64" {
 
@@ -339,7 +341,11 @@ build {
       
       echo "Starting main provisioning script..."
       chmod u+x /provision/cml.sh
-      %{ if local.debug }/provision/cml.sh || echo Failed, sleeping... && sleep 9999%{ else }/provision/cml.sh%{ endif }
+      %{ if local.debug }
+      /provision/cml.sh || echo Failed, sleeping... && find /var/log/virl2 -type f -exec cat {} \; && sleep 9999
+      %{ else }
+      /provision/cml.sh && find /var/log/virl2 -type f -exec cat {} \;
+      %{ endif }
       
       echo "Save machine-id (default password) for future use..."
       cp /etc/machine-id /provision/saved-machine-id
