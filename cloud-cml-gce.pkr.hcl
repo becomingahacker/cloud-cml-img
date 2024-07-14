@@ -341,11 +341,15 @@ build {
       
       echo "Starting main provisioning script..."
       chmod u+x /provision/cml.sh
+      if [ ! /provision/cml.sh ]; then 
+        echo "Failed, displaying CML logs and stopping build..."
+        find /var/log/virl2 -type f -printf '=== %p ===\n' -exec cat {} \;
       %{ if local.debug }
-      /provision/cml.sh || echo Failed, sleeping... && find /var/log/virl2 -type f -exec cat {} \; && sleep 9999
-      %{ else }
-      /provision/cml.sh && find /var/log/virl2 -type f -exec cat {} \; && false
+        echo "Debugging enabled, pausing build..."
+        sleep 99999
       %{ endif }
+        exit 1
+      fi
       
       echo "Save machine-id (default password) for future use..."
       cp /etc/machine-id /provision/saved-machine-id
