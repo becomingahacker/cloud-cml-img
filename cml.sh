@@ -64,11 +64,12 @@ function base_setup() {
     fi
 
     # Add i386 architecture for iol-tools
-    dpkg --add-architecture i386
+    # FIXME cmm - No longer required
+    #dpkg --add-architecture i386
 
     # copy CML distribution package from cloud storage into our instance, unpack & install
     copyfile ${CFG_APP_SOFTWARE} /provision/
-    tar xvf /provision/$(basename ${CFG_APP_SOFTWARE}) --wildcards -C /tmp 'cml2*_amd64.deb' 'patty*_amd64.deb' 'iol-tools*_amd64.deb' '*_i386.deb'
+    tar xvf /provision/$(basename ${CFG_APP_SOFTWARE}) --wildcards -C /tmp 'cml2*_amd64.deb' 'patty*_amd64.deb' 'iol-tools*_amd64.deb'
     systemctl stop ssh
     apt-get install -y /tmp/*.deb
 
