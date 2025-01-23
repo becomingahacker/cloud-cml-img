@@ -351,7 +351,9 @@ build {
         echo "Success!"
       else
         echo "Failed, displaying CML logs and stopping build..."
-        find /var/log/virl2 -type f -printf '=== %p ===\n' -exec cat {} \;
+        if [[ -d /var/log/virl2 ]]; then
+          find /var/log/virl2 -type f -printf '=== %p ===\n' -exec cat {} \;
+        fi
       %{ if var.debug }
         echo "Debugging enabled, pausing build..."
         sleep 99999
