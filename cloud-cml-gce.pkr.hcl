@@ -375,9 +375,20 @@ build {
   # Clean up all cloud-init data.
   provisioner "shell" {
     inline = [
+      # Don't wipe out the machine-id on the controller.
+      "cloud-init clean -c all -l",
+      "rm -rf /var/lib/cloud",
+    ]
+    only = ["cloud-cml-controller-amd64"]
+  }
+
+  # Clean up all cloud-init data.
+  provisioner "shell" {
+    inline = [
       "cloud-init clean -c all -l --machine-id",
       "rm -rf /var/lib/cloud",
     ]
+    only = ["cloud-cml-compute-amd64"]
   }
 
   post-processor "manifest" {
