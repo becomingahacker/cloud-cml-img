@@ -220,7 +220,7 @@ source "googlecompute" "cloud-cml-controller-amd64" {
   project_id              = var.project_id
   source_image_family     = var.source_image_family
   source_image_project_id = [var.source_image_project_id]
-  image_family            = "cloud-cml-controller-amd64"
+  image_family            = "cloud-cml-controller-${var.cml_version}-amd64"
   image_name              = "cloud-cml-controller-${var.cml_version}-{{timestamp}}-amd64"
 
   zone         = var.zone
@@ -257,7 +257,7 @@ source "googlecompute" "cloud-cml-compute-amd64" {
   project_id              = var.project_id
   source_image_family     = var.source_image_family
   source_image_project_id = [var.source_image_project_id]
-  image_family            = "cloud-cml-compute-amd64"
+  image_family            = "cloud-cml-compute-${var.cml_version}-amd64"
   image_name              = "cloud-cml-compute-${var.cml_version}-{{timestamp}}-amd64"
 
   zone         = var.zone
