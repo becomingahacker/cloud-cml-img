@@ -375,22 +375,23 @@ build {
   # Clean up all cloud-init data.
   provisioner "shell" {
     inline = [
-      # Don't wipe out the machine-id on the controller.
+      # Don't wipe out the machine-id on the controller.  It's used
+      # as the default CML2 password.  We change it at install.
       "echo cloud-init clean -c all -l",
       "cloud-init clean -c all -l",
       "rm -rf /var/lib/cloud",
     ]
-    only = ["cloud-cml-controller-amd64"]
+    only = ["googlecompute.cloud-cml-controller-amd64"]
   }
 
-  # Clean up all cloud-init data.
+  # Clean up all cloud-init data, including the machine-id.
   provisioner "shell" {
     inline = [
       "echo cloud-init clean -c all -l --machine-id",
       "cloud-init clean -c all -l --machine-id",
       "rm -rf /var/lib/cloud",
     ]
-    only = ["cloud-cml-compute-amd64"]
+    only = ["googlecompute.cloud-cml-compute-amd64"]
   }
 
   post-processor "manifest" {
