@@ -361,9 +361,9 @@ build {
         exit 1
       fi
       
-      echo "Save machine-id (default password) for future use..."
-      cp /etc/machine-id /provision/saved-machine-id
-      chmod 0600 /provision/saved-machine-id
+      #echo "Save machine-id (default password) for future use..."
+      #cp /etc/machine-id /provision/saved-machine-id
+      #chmod 0600 /provision/saved-machine-id
     EOF
     ]
     env = {
@@ -376,6 +376,7 @@ build {
   provisioner "shell" {
     inline = [
       # Don't wipe out the machine-id on the controller.
+      "echo cloud-init clean -c all -l",
       "cloud-init clean -c all -l",
       "rm -rf /var/lib/cloud",
     ]
@@ -385,6 +386,7 @@ build {
   # Clean up all cloud-init data.
   provisioner "shell" {
     inline = [
+      "echo cloud-init clean -c all -l --machine-id",
       "cloud-init clean -c all -l --machine-id",
       "rm -rf /var/lib/cloud",
     ]
