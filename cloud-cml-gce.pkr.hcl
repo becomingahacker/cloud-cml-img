@@ -207,6 +207,11 @@ variable "cml_package_path" {
   description = "CML package path in bucket, e.g. cml2/cml2_2.7.0-4_amd64-20.pkg"
 }
 
+variable "cml_version" {
+  type        = string
+  default     = ""
+  description = "CML version, e.g. 2.7.0-6"
+}
 
 source "googlecompute" "cloud-cml-controller-amd64" {
 
@@ -216,7 +221,7 @@ source "googlecompute" "cloud-cml-controller-amd64" {
   source_image_family     = var.source_image_family
   source_image_project_id = [var.source_image_project_id]
   image_family            = "cloud-cml-controller-amd64"
-  image_name              = "cloud-cml-controller-{{timestamp}}-amd64"
+  image_name              = "cloud-cml-controller-${var.cml_version}-{{timestamp}}-amd64"
 
   zone         = var.zone
   machine_type = "n2-standard-4"
@@ -253,7 +258,7 @@ source "googlecompute" "cloud-cml-compute-amd64" {
   source_image_family     = var.source_image_family
   source_image_project_id = [var.source_image_project_id]
   image_family            = "cloud-cml-compute-amd64"
-  image_name              = "cloud-cml-compute-{{timestamp}}-amd64"
+  image_name              = "cloud-cml-compute-${var.cml_version}-{{timestamp}}-amd64"
 
   zone         = var.zone
   machine_type = "n2-standard-4"
