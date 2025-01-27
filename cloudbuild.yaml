@@ -18,7 +18,7 @@ steps:
       - 'PROVISION_SCRIPT=cml.sh'
       - 'GCS_ARTIFACT_BUCKET=bah-machine-images'
       - 'CML_PACKAGE_PATH=cml2/cml2_2.8.0-6_amd64-32.pkg'
-      - 'CML_VERSION=2.8.0-6'
+      - 'CML_VERSION=2-8-0'
       - 'LOCATION=$LOCATION'
       - 'PROJECT_ID=$PROJECT_ID'
       - 'LOCATION=${LOCATION}'
