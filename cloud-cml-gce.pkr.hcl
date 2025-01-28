@@ -56,6 +56,7 @@ locals {
     "jq",
     "frr",
     "python3-pip",
+    "python3-venv",
   ]
 
   cloud_init_config_write_files_template = [
