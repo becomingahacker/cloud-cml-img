@@ -55,6 +55,7 @@ locals {
     "curl",
     "jq",
     "frr",
+    "python3-pip",
   ]
 
   cloud_init_config_write_files_template = [
