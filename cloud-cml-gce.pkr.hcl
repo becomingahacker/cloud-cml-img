@@ -414,6 +414,9 @@ build {
       %{ endif }
         exit 1
       fi
+
+      # Disable virl2 on bootup.  We'll restart it after we install.
+      systemctl disable --now virl2.target
       
       #echo "Save machine-id (default password) for future use..."
       #cp /etc/machine-id /provision/saved-machine-id
