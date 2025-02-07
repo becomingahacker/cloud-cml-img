@@ -417,6 +417,10 @@ build {
 
       # Disable virl2 on bootup.  We'll restart it after we install.
       systemctl disable --now virl2.target
+
+      # Disable Avahi, which may conflict with systemd-resolved
+      systemctl disable --now avahi-daemon.socket
+      systemctl disable --now avahi-daemon.service
       
       #echo "Save machine-id (default password) for future use..."
       #cp /etc/machine-id /provision/saved-machine-id
