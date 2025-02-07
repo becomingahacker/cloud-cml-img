@@ -90,6 +90,17 @@ locals {
     "gcsfuse",
   ]
 
+  cloud_init_config_packages_controller = concat(local.cloud_init_config_packages_template,
+    [
+      "radvd",
+    ]
+  )
+
+  cloud_init_config_packages_compute = concat(local.cloud_init_config_packages_template,
+    [
+    ]
+  )
+
   cloud_init_config_write_files_template = [
     {
       path        = "/etc/cloud/clean.d/10-cml-clean"
@@ -129,14 +140,19 @@ locals {
       EOF
     },
   ]
+
   cloud_init_config_runcmd_template = [
+    # Don't install cml2 fully.  The rest of the install will occur
+    # at first boot.
     "touch /tmp/PACKER_BUILD",
+    # Don't attempt to update packages on bootup.
+    "systemctl disable --now apt-daily-upgrade.service",
   ]
 
   cloud_init_config_controller = merge(local.cloud_init_config_template, {
     hostname = "cml-controller-build"
 
-    packages = local.cloud_init_config_packages_template
+    packages = local.cloud_init_config_packages_controller
 
     write_files = concat(local.cloud_init_config_write_files_template, [
       {
@@ -153,7 +169,7 @@ locals {
   cloud_init_config_compute = merge(local.cloud_init_config_template, {
     hostname = "cml-compute-build"
 
-    packages = local.cloud_init_config_packages_template
+    packages = local.cloud_init_config_packages_compute
 
     write_files = concat(local.cloud_init_config_write_files_template, [
       {
