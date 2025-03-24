@@ -1,20 +1,6 @@
 {
     "definitions": [
-      "alpine",
-      "iol-xe",
-      "ioll2-xe",
-      "iosv",
-      "iosvl2",
-      "server",
-      "ubuntu"
     ],
     "images": [
-      "alpine-base-3-19-1",
-      "iol-xe-17-12-01",
-      "ioll2-xe-17-12-01",
-      "iosv-159-3-m8",
-      "iosvl2-2020",
-      "server-tcl-14-0",
-      "ubuntu-22-04-20240126"
     ]
-  }
+}
