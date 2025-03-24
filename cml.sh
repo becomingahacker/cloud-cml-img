@@ -32,7 +32,8 @@ function setup_pre_gcp() {
 function base_setup() {
 
     # Check if this device is a controller
-    if is_controller; then
+    #if is_controller; then
+    if false; then
         # copy node definitions and images to the instance
         VLLI=/var/lib/libvirt/images
         NDEF=node-definitions
