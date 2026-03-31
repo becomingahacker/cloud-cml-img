@@ -283,8 +283,8 @@ source "googlecompute" "cloud-cml-controller-amd64" {
     var.location,
   ]
 
-  #ssh_username            = "root"
-  #temporary_key_pair_type = "ed25519"
+  ssh_username            = "root"
+  temporary_key_pair_type = "ed25519"
   use_iap = true
 
   metadata = {
@@ -321,8 +321,8 @@ source "googlecompute" "cloud-cml-compute-amd64" {
     var.location,
   ]
 
-  #ssh_username            = "root"
-  #temporary_key_pair_type = "ed25519"
+  ssh_username            = "root"
+  temporary_key_pair_type = "ed25519"
   use_iap = true
 
   metadata = {
