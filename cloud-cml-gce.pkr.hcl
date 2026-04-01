@@ -357,27 +357,27 @@ build {
   }
 
   provisioner "file" {
-    source      = "/workspace/cml.sh"
+    source      = "/workspace/scripts/cml.sh"
     destination = "/provision/cml.sh"
   }
 
   provisioner "file" {
-    source      = "/workspace/common.sh"
+    source      = "/workspace/scripts/common.sh"
     destination = "/provision/common.sh"
   }
 
   provisioner "file" {
-    source      = "/workspace/copyfile.sh"
+    source      = "/workspace/scripts/copyfile.sh"
     destination = "/provision/copyfile.sh"
   }
 
   provisioner "file" {
-    source      = "/workspace/vars.sh"
+    source      = "/workspace/scripts/vars.sh"
     destination = "/provision/vars.sh"
   }
 
   provisioner "file" {
-    source      = "/workspace/refplat.json"
+    source      = "/workspace/scripts/refplat.json"
     destination = "/provision/refplat.json"
   }
 
@@ -416,6 +416,25 @@ build {
       %{ endif }
         exit 1
       fi
+
+      cat > /etc/cloud/clean.d/10-cml-clean <<EOF2
+      #!/bin/sh -x
+
+      rm /etc/hosts
+      rm /etc/hostname
+
+      rm /root/.zsh_history
+      rm /root/.bash_history
+      truncate -s 0 /root/.ssh/authorized_keys
+      rm -rf /root/.config/gcloud
+
+      # Clean up packages that can be removed
+      apt-get autoremove --purge -y
+      apt-get clean
+
+      EOF2
+
+      chmod u+x /etc/cloud/clean.d/10-cml-clean
 
       # Disable virl2 on bootup.  We'll restart it after we install.
       systemctl disable --now virl2.target
