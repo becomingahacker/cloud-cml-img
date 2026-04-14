@@ -54,7 +54,12 @@ steps:
         -var "cml_package_path=$CML_PACKAGE_PATH" \
         -var "cml_version=$CML_VERSION" \
         /workspace/cloud-cml-gce.pkr.hcl
+
+      # Serial builds avoid OS Login 409 when two sources import keys for the same
+      # principal at once.
+      # https://github.com/hashicorp/packer-plugin-googlecompute/issues/282
       packer build \
+        -parallel-builds=1 \
         -var "debug=$DEBUG" \
         -var "service_account_email=$SERVICE_ACCOUNT_EMAIL" \
         -var "location=$LOCATION" \

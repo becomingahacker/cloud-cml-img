@@ -340,10 +340,6 @@ source "googlecompute" "cloud-cml-compute-amd64" {
 
 
 build {
-  # Serial builds avoid OS Login 409 when two sources import keys for the same
-  # principal at once (see hashicorp/packer-plugin-googlecompute#282).
-  max_parallel = 1
-
   sources = [
     "sources.googlecompute.cloud-cml-controller-amd64",
     "sources.googlecompute.cloud-cml-compute-amd64",
