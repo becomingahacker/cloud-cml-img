@@ -47,15 +47,15 @@ locals {
 
     manage_etc_hosts = true
 
-    locale           = "en_US.UTF-8"
-    timezone         = "Etc/UTC"
+    locale   = "en_US.UTF-8"
+    timezone = "Etc/UTC"
 
     apt = {
       sources = {
         gcsfuse = {
           # Change if base Ubuntu image changes.  Currently using Ubuntu 24.04 LTS Noble Numbat
           source = "deb https://packages.cloud.google.com/apt gcsfuse-noble main"
-          key = <<-EOF
+          key    = <<-EOF
             -----BEGIN PGP PUBLIC KEY BLOCK-----
 
             xsBNBGCRt7MBCADkYJHHQQoL6tKrW/LbmfR9ljz7ib2aWno4JO3VKQvLwjyUMPpq
@@ -285,11 +285,11 @@ source "googlecompute" "cloud-cml-controller-amd64" {
 
   ssh_username            = "root"
   temporary_key_pair_type = "ed25519"
-  use_iap = true
+  use_iap                 = true
 
   metadata = {
     # This will prevent the project-wide SSH keys from being added to the instance.
-    "block-project-ssh-keys" = ! var.debug ? "TRUE" : "FALSE"
+    "block-project-ssh-keys" = !var.debug ? "TRUE" : "FALSE"
     "user-data"              = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_controller))
   }
 
@@ -323,11 +323,11 @@ source "googlecompute" "cloud-cml-compute-amd64" {
 
   ssh_username            = "root"
   temporary_key_pair_type = "ed25519"
-  use_iap = true
+  use_iap                 = true
 
   metadata = {
     # This will prevent the project-wide SSH keys from being added to the instance.
-    "block-project-ssh-keys" = ! var.debug ? "TRUE" : "FALSE"
+    "block-project-ssh-keys" = !var.debug ? "TRUE" : "FALSE"
     "user-data"              = format("#cloud-config\n%s", yamlencode(local.cloud_init_config_compute))
   }
 
@@ -340,13 +340,22 @@ source "googlecompute" "cloud-cml-compute-amd64" {
 
 
 build {
+  # Serial builds avoid OS Login 409 when two sources import keys for the same
+  # principal at once (see hashicorp/packer-plugin-googlecompute#282).
+  max_parallel = 1
+
   sources = [
     "sources.googlecompute.cloud-cml-controller-amd64",
     "sources.googlecompute.cloud-cml-compute-amd64",
   ]
 
   provisioner "shell" {
-    inline = ["mkdir -vp /provision"]
+    # IAP + OS Login connects as the OS Login user, not root; make /provision
+    # writable for file uploads.
+    inline = [
+      "sudo mkdir -vp /provision",
+      "sudo chown \"$(id -un):$(id -gn)\" /provision",
+    ]
   }
 
   # These are files copied here, rather than in the cloud-init because we don't
@@ -385,6 +394,8 @@ build {
   # main provisioning script.  If cloud-init fails,
   # output the log and stop the build.
   provisioner "shell" {
+    # Same OS Login user as above; run the main steps as root.
+    execute_command = "chmod +x {{ .Path }}; sudo bash '{{ .Path }}'"
     inline = [<<-EOF
       echo "waiting for cloud-init setup to finish..."
       cloud-init status --wait || true
@@ -425,10 +436,10 @@ build {
         if [ -d /var/log/virl2 ]; then
           find /var/log/virl2 -type f -printf '=== %p ===\n' -exec cat {} \;
         fi
-      %{ if var.debug }
+      %{if var.debug}
         echo "Debugging enabled, pausing build..."
         sleep 99999
-      %{ endif }
+      %{endif}
         exit 1
       fi
 
@@ -467,6 +478,7 @@ build {
 
   # Clean up all cloud-init data.
   provisioner "shell" {
+    execute_command = "chmod +x {{ .Path }}; sudo bash '{{ .Path }}'"
     inline = [
       # Don't wipe out the machine-id on the controller.  It's used
       # as the default CML2 password.  We change it at install.
@@ -479,6 +491,7 @@ build {
 
   # Clean up all cloud-init data, including the machine-id.
   provisioner "shell" {
+    execute_command = "chmod +x {{ .Path }}; sudo bash '{{ .Path }}'"
     inline = [
       "echo cloud-init clean -c all -l --machine-id",
       "cloud-init clean -c all -l --machine-id",
