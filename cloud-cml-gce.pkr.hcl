@@ -391,7 +391,7 @@ build {
   # output the log and stop the build.
   provisioner "shell" {
     # Same OS Login user as above; run the main steps as root.
-    execute_command = "chmod +x {{ .Path }}; sudo bash '{{ .Path }}'"
+    execute_command = "chmod +x {{ .Path }}; sudo env {{ .Vars }} bash '{{ .Path }}'"
     inline = [<<-EOF
       echo "waiting for cloud-init setup to finish..."
       cloud-init status --wait || true
