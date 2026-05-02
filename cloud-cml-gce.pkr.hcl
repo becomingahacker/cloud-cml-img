@@ -472,6 +472,17 @@ build {
     }
   }
 
+  # Install Google Cloud Ops Agent for monitoring and logging.
+  provisioner "shell" {
+    execute_command = "chmod +x {{ .Path }}; sudo bash '{{ .Path }}'"
+    inline = [
+      "curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh",
+      "bash add-google-cloud-ops-agent-repo.sh --also-install",
+      "rm add-google-cloud-ops-agent-repo.sh",
+      "systemctl disable google-cloud-ops-agent.service",
+    ]
+  }
+
   # Clean up all cloud-init data.
   provisioner "shell" {
     execute_command = "chmod +x {{ .Path }}; sudo bash '{{ .Path }}'"
