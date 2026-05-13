@@ -1,6 +1,6 @@
 #
 # This file is part of Cisco Modeling Labs
-# Copyright (c) 2019-2024, Cisco Systems, Inc.
+# Copyright (c) 2019-2026, Cisco Systems, Inc.
 # All rights reserved.
 #
 
@@ -8,7 +8,7 @@ steps:
   - name: 'us-east1-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img'
     env:
       # If set to true, the build will pause on failures and allow project-level 
-      # SSH keys to Packer machines.  Depending on the stage of install failuare,
+      # SSH keys to Packer machines.  Depending on the stage of install failure,
       # SSH might be listening on port 1122.
       - 'DEBUG=true'
       - 'PACKER_LOG=0'
@@ -17,9 +17,8 @@ steps:
       - 'SOURCE_IMAGE_PROJECT_ID=ubuntu-os-cloud'
       - 'PROVISION_SCRIPT=cml.sh'
       - 'GCS_ARTIFACT_BUCKET=bah-machine-images'
-      - 'CML_PACKAGE_PATH=cml2/cml2_2.10.0-10_amd64-15.pkg'
-      - 'CML_VERSION=2-10-0'
-      - 'LOCATION=$LOCATION'
+      - 'CML_PACKAGE_PATH=cml2/cml2_2.10.0-13_amd64-17.pkg'
+      - 'CML_VERSION=2-10-0-13'
       - 'PROJECT_ID=$PROJECT_ID'
       - 'LOCATION=${LOCATION}'
       - 'ZONE=${LOCATION}-b'
