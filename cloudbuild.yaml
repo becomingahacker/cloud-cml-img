@@ -4,8 +4,13 @@
 # All rights reserved.
 #
 
+substitutions:
+  _LOCATION: 'us-west4'
+  _ZONE: 'us-west4-b'
+
 steps:
-  - name: 'us-east1-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img'
+  # - name: 'us-east1-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img'
+  - name: '${_LOCATION}-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img'
     env:
       # If set to true, the build will pause on failures and allow project-level 
       # SSH keys to Packer machines.  Depending on the stage of install failure,
@@ -20,8 +25,9 @@ steps:
       - 'CML_PACKAGE_PATH=cml2/cml2_2.10.0-13_amd64-17.pkg'
       - 'CML_VERSION=2-10-0-13'
       - 'PROJECT_ID=$PROJECT_ID'
-      - 'LOCATION=${LOCATION}'
-      - 'ZONE=${LOCATION}-b'
+      - 'LOCATION=${_LOCATION}'
+      # - 'ZONE=${LOCATION}-b'
+      - 'ZONE=${_ZONE}'
       - 'SERVICE_ACCOUNT_EMAIL=$SERVICE_ACCOUNT_EMAIL'
       # Also see refplat.json for the list of node definitions and images to
       # include on the controller

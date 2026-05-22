@@ -8,4 +8,5 @@ Hacker Lab on Google Cloud Platform.
   internally on Cisco's network at https://virlbuilds.cisco.com/fcs/
 * Edit `cloudbuild.yml` file to choose a base Ubuntu image and Debian Package
   for CML.
-* Commit and push.  [Cloud Build](https://console.cloud.google.com/cloud-build/dashboard;region=us-east1?inv=1&invt=AbnoiA&project=gcp-asigbahgcp-nprd-47930) takes care of the rest.
+* Commit and push.  [Cloud Build](https://console.cloud.google.com/cloud-build/dashboard;region=us-west4?inv=1&invt=AbnoiA&project=gcp-asigbahgcp-nprd-47930) takes care of the rest.
+<!-- Previously: https://console.cloud.google.com/cloud-build/dashboard;region=us-east1?inv=1&invt=AbnoiA&project=gcp-asigbahgcp-nprd-47930 -->

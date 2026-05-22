@@ -1,4 +1,9 @@
 
+# gcloud auth configure-docker us-west4-docker.pkg.dev
+# docker build . -t us-west4-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img
+# docker push us-west4-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img
+#
+# Previously in us-east1:
 # gcloud auth configure-docker us-east1-docker.pkg.dev
 # docker build . -t us-east1-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img
 # docker push us-east1-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img

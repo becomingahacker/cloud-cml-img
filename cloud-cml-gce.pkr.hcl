@@ -211,13 +211,13 @@ variable "project_id" {
 variable "location" {
   type        = string
   default     = ""
-  description = "Region, e.g. us-east1"
+  description = "Region, e.g. us-west4"
 }
 
 variable "zone" {
   type        = string
   default     = ""
-  description = "Zone, e.g. us-east1-b"
+  description = "Zone, e.g. us-west4-b"
 }
 
 variable "service_account_email" {
