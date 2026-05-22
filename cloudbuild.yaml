@@ -5,11 +5,16 @@
 #
 
 substitutions:
-  _LOCATION: 'us-west4'
-  _ZONE: 'us-west4-b'
+  # Default region for the Cloud Build trigger.
+  # A second trigger can override these to build in another region, e.g.:
+  #   _LOCATION: 'us-west4'
+  #   _ZONE: 'us-west4-b'
+  _LOCATION: 'us-east1'
+  _ZONE: 'us-east1-b'
 
 steps:
-  # - name: 'us-east1-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img'
+  # Second trigger (us-west4) resolves to:
+  #   us-west4-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img
   - name: '${_LOCATION}-docker.pkg.dev/gcp-asigbahgcp-nprd-47930/bah-builders/cloud-cml-img'
     env:
       # If set to true, the build will pause on failures and allow project-level 
